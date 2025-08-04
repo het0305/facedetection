@@ -1,4 +1,4 @@
-const Student = require('../models/Student');
+const Student = require('./models/Student');
 const { getFaceDescriptor } = require('../utils/faceUtils');
 
 exports.registerStudent = async (req, res) => {

@@ -1,4 +1,4 @@
-const Student = require('../models/Student');
+const Student = require('./models/Student');
 const Attendance = require('../models/Attendance');
 const { getFaceDescriptor } = require('../utils/faceUtils');
 
