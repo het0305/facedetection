@@ -6,4 +6,4 @@ const attendanceSchema = new mongoose.Schema({
   status: { type: String, default: 'Present' }
 });
 
-module.exports = mongoose.model('Attendance', attendanceSchema);
+module.exports = mongoose.models.Attendance || mongoose.model('Attendance', attendanceSchema);
