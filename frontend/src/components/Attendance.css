@@ -1,0 +1,143 @@
+/* Full Page Background */
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 50px 20px;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* Page Title */
+.page-title {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Glass Card */
+.form-card {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 25px;
+  padding: 40px 50px;
+  width: 420px;
+  max-width: 95%;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.8s ease-in-out;
+  margin-bottom: 40px;
+}
+
+/* Input Fields */
+.input-field {
+  width: 100%;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  transition: 0.3s;
+}
+
+.input-field::placeholder {
+  color: #d0d0d0;
+}
+
+.input-field:focus {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+}
+
+/* Webcam container centered */
+.camera-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.camera-container video {
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+/* Buttons */
+.capture-btn{
+  background: linear-gradient(90deg, #b541cc, #ff7eb3);
+  border: none;
+  padding: 14px 28px;
+  margin-top: 10px;
+  border-radius: 12px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  box-shadow: 0px 5px 20px rgba(255, 120, 180, 0.5);
+}
+
+.submit-btn {
+  background: linear-gradient(90deg, #eb0e32, #aa3d61);
+  border: none;
+  padding: 14px 28px;
+  margin-top: 10px;
+  border-radius: 12px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  box-shadow: 0px 5px 20px rgba(255, 120, 180, 0.5);
+}
+
+.capture-btn:hover, .submit-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0px 8px 30px rgba(255, 120, 180, 0.7);
+}
+
+.submit-btn.disabled {
+  background: gray;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Status Message */
+.status-text {
+  margin-top: 20px;
+  font-weight: 500;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.status-text.success {
+  color: #00ffae;
+  background: rgba(0, 255, 174, 0.15);
+}
+
+.status-text.error {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.15);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
