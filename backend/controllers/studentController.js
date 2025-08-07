@@ -3,26 +3,29 @@ const { getFaceDescriptor } = require('../utils/faceUtils');
 const path = require('path');
 const fs = require('fs');
 
+/**
+ * Register a new student with face image and roll number
+ */
 exports.registerStudent = async (req, res) => {
   try {
     const { name, rollNo } = req.body;
 
-    // 🔹 Validate image
+    // 🔹 Ensure image was uploaded
     if (!req.file) {
       return res.status(400).json({ error: 'No image uploaded. Please capture a photo.' });
     }
 
     const imagePath = req.file.path;
 
-    // 🔹 Get face descriptor from image
+    // 🔹 Get facial descriptor from image
     const descriptor = await getFaceDescriptor(imagePath);
 
     if (!descriptor) {
-      fs.unlinkSync(imagePath); // delete invalid image
+      fs.unlinkSync(imagePath); // Delete unusable image
       return res.status(400).json({ error: 'No face detected. Try again with better lighting or face angle.' });
     }
 
-    // 🔹 Check for duplicate student
+    // 🔹 Prevent duplicate registration with same roll number
     const existingStudent = await Student.findOne({ rollNo });
     if (existingStudent) {
       fs.unlinkSync(imagePath);
@@ -33,7 +36,7 @@ exports.registerStudent = async (req, res) => {
     const student = new Student({
       name,
       rollNo,
-      embeddings: Array.from(descriptor), // convert Float32Array to plain array
+      embeddings: Array.from(descriptor), // Float32Array → plain JS array
       image: `/uploads/${req.file.filename}`,
     });
 
@@ -45,6 +48,7 @@ exports.registerStudent = async (req, res) => {
       message: 'Student registered successfully.', 
       student 
     });
+
   } catch (error) {
     console.error('❌ Registration error:', error);
     return res.status(500).json({ error: 'Server error: ' + error.message });

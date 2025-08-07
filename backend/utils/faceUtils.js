@@ -3,14 +3,22 @@ const path = require('path');
 const canvas = require('canvas');
 const fs = require('fs');
 
+// Patch face-api.js to use canvas in Node.js
 const { Canvas, Image, ImageData } = canvas;
-
-// Monkey patch canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
+// Path to the folder containing face-api.js models
 const MODEL_PATH = path.join(__dirname, '../models');
 
-// ✅ Load models safely
+// Options for face detection
+const detectionOptions = new faceapi.TinyFaceDetectorOptions({
+  inputSize: 320,
+  scoreThreshold: 0.5,
+});
+
+/**
+ * Load all face-api.js models from disk
+ */
 async function loadModels() {
   try {
     console.log("⏳ Loading face-api.js models...");
@@ -19,21 +27,19 @@ async function loadModels() {
     await faceapi.nets.faceRecognitionNet.loadFromDisk(MODEL_PATH);
     console.log("✅ Face recognition models loaded.");
   } catch (error) {
-    console.error("❌ Failed to load models:", error.message);
+    console.error("❌ Failed to load face-api.js models:", error.message);
     throw error;
   }
 }
 
-// ✅ Detection config
-const detectionOptions = new faceapi.TinyFaceDetectorOptions({
-  inputSize: 320,
-  scoreThreshold: 0.5,
-});
-
-// ✅ Extract 128-d descriptor from face image buffer
-async function getFaceDescriptor(imageBuffer) {
+/**
+ * Get 128-dimensional face descriptor from an image
+ * @param {string|Buffer} imagePathOrBuffer - Path to image or buffer
+ * @returns {Float32Array|null} - Face descriptor
+ */
+async function getFaceDescriptor(imagePathOrBuffer) {
   try {
-    const img = await canvas.loadImage(imageBuffer);
+    const img = await canvas.loadImage(imagePathOrBuffer);
     const detection = await faceapi
       .detectSingleFace(img, detectionOptions)
       .withFaceLandmarks()
@@ -44,14 +50,14 @@ async function getFaceDescriptor(imageBuffer) {
     }
 
     return detection.descriptor;
-  } catch (err) {
-    console.error("❌ Face descriptor error:", err.message);
-    throw err;
+  } catch (error) {
+    console.error('❌ Error extracting face descriptor:', error.message);
+    throw error;
   }
 }
 
 module.exports = {
   loadModels,
   getFaceDescriptor,
-  detectionOptions,
+  detectionOptions
 };
