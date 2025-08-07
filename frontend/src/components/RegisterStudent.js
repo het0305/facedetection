@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import CameraCapture from './CameraCapture';
-<<<<<<< HEAD
 import './RegisterStudent.css';
-=======
 import './Attendance.css'; 
->>>>>>> 7bcce34f525180c7e81b0484a25dc45e3bb6c988
 
 const RegisterStudent = () => {
   const [name, setName] = useState('');
