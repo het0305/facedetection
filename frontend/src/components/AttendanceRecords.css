@@ -1,22 +1,64 @@
+/* ==== Page Layout ==== */
 .attendance-records-container {
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
   text-align: center;
 }
 
+/* ==== Title ==== */
+.attendance-title {
+  font-size: 2.75rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 20px rgba(0, 255, 255, 0.2);
+}
+
+/* ==== Description ==== */
+.attendance-description {
+  font-size: 1.2rem;
+  max-width: 600px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 40px;
+}
+
+/* ==== Download Button ==== */
 .download-button {
-  display: inline-block;
-  padding: 12px 20px;
-  margin-top: 20px;
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  border-radius: 5px;
+  padding: 14px 28px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  border: none;
+  border-radius: 12px;
   text-decoration: none;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 255, 255, 0.2);
+  transition: all 0.3s ease;
 }
 
 .download-button:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+  transform: translateY(-2px);
+}
+
+/* ==== Responsive ==== */
+@media screen and (max-width: 480px) {
+  .attendance-title {
+    font-size: 2rem;
+  }
+
+  .attendance-description {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
+  .download-button {
+    width: 100%;
+    font-size: 1rem;
+  }
 }

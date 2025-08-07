@@ -17,6 +17,7 @@ const CameraCapture = ({ onCapture }) => {
         screenshotFormat="image/jpeg"
         width={320}
         height={240}
+        className="webcam-box"
       />
       <button className="capture-btn" onClick={capture}>📸 Capture Photo</button>
     </div>

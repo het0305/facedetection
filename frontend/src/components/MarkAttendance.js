@@ -65,6 +65,7 @@ const MarkAttendance = () => {
           screenshotFormat="image/jpeg"
           width={320}
           height={240}
+          className="webcam-box"
         />
         <button onClick={captureAndMark} className="capture-btn" disabled={loading}>
           {loading ? '⏳ Processing...' : '📸 Capture & Mark'}

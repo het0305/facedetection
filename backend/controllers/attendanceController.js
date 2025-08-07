@@ -2,9 +2,10 @@ const Student = require('../models/Student');
 const Attendance = require('../models/Attendance');
 const { getFaceDescriptor } = require('../utils/faceUtils');
 const faceapi = require('face-api.js');
+const { updateExcel } = require('../utils/excelUtils'); // ✅ Excel function
 
 /**
- * Mark attendance using face recognition (only once per day per student)
+ * ✅ Mark attendance using face recognition (once per day per student)
  */
 exports.markAttendance = async (req, res) => {
   try {
@@ -12,7 +13,7 @@ exports.markAttendance = async (req, res) => {
       return res.status(400).json({ error: 'No image uploaded' });
     }
 
-    // Get facial descriptor from uploaded image
+    // ➕ Get facial descriptor from image
     const descriptor = await getFaceDescriptor(req.file.path);
     if (!descriptor) {
       return res.status(400).json({ error: 'No face detected in the image' });
@@ -22,7 +23,7 @@ exports.markAttendance = async (req, res) => {
     let recognizedStudent = null;
     let minDistance = 0.5;
 
-    // Compare with each student's embedding
+    // ➕ Compare with saved embeddings
     students.forEach(student => {
       const distance = faceapi.euclideanDistance(descriptor, student.embeddings);
       if (distance < minDistance) {
@@ -51,7 +52,7 @@ exports.markAttendance = async (req, res) => {
       });
     }
 
-    // Save new attendance
+    // ➕ Save new attendance
     const attendance = new Attendance({
       studentId: recognizedStudent._id,
       status: 'Present',
@@ -61,7 +62,9 @@ exports.markAttendance = async (req, res) => {
 
     await attendance.save();
 
+    // ✅ Get today’s attendance and update Excel file
     const todayAttendance = await getUniqueTodayAttendance(startOfDay, endOfDay);
+    await updateExcel(todayAttendance); // 🔁 Update sheet with today's records
 
     res.json({
       message: `Attendance marked for ${recognizedStudent.name}`,
@@ -75,7 +78,7 @@ exports.markAttendance = async (req, res) => {
 };
 
 /**
- * Get all today's attendance records
+ * ✅ Get all today's attendance records
  */
 exports.getTodayAttendance = async (req, res) => {
   try {
@@ -89,7 +92,9 @@ exports.getTodayAttendance = async (req, res) => {
   }
 };
 
-// 🔁 Utility function to get unique attendance records
+/**
+ * 🔁 Utility: get unique records for the day
+ */
 async function getUniqueTodayAttendance(startOfDay, endOfDay) {
   const records = await Attendance.find({
     date: { $gte: startOfDay, $lte: endOfDay }
