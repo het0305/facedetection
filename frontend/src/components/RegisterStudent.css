@@ -108,6 +108,8 @@
   box-sizing: border-box;
 }
 
+
+/* ==== Submit Button ==== */
 .submit-btn {
   margin-top: 20px;
   padding: 14px;
@@ -133,6 +135,7 @@
   pointer-events: none;
 }
 
+/* ==== Status Messages ==== */
 .status-text {
   margin-top: 20px;
   padding: 12px 16px;
