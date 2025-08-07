@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import axios from 'axios';
-import './Attendance.css';
-
+import './MarkAttendance.css'; 
+// specific styles for MarkAttendance
 const MarkAttendance = () => {
   const webcamRef = useRef(null);
   const [status, setStatus] = useState('');
@@ -87,7 +87,9 @@ const MarkAttendance = () => {
         </ul>
       )}
     </div>
-  );
+  
+
+);
 };
 
 export default MarkAttendance;

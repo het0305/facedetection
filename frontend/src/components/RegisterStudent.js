@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import CameraCapture from './CameraCapture';
-import './Attendance.css'; // same CSS file for all pages
+import './RegisterStudent.css';
 
 const RegisterStudent = () => {
   const [name, setName] = useState('');
@@ -13,9 +13,16 @@ const RegisterStudent = () => {
   const navigate = useNavigate();
 
   const handleCapture = (imageSrc) => {
-    fetch(imageSrc)
-      .then(res => res.blob())
-      .then(blob => setImage(new File([blob], 'face.jpg', { type: 'image/jpeg' })));
+    const byteString = atob(imageSrc.split(',')[1]);
+    const mimeString = imageSrc.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: mimeString });
+    const file = new File([blob], 'face.jpg', { type: mimeString });
+    setImage(file);
   };
 
   const handleSubmit = async (e) => {
@@ -36,7 +43,7 @@ const RegisterStudent = () => {
       setMessage({ type: 'success', text: res.data.message || '✅ Student registered successfully' });
 
       setTimeout(() => {
-        navigate('/attendance'); // Redirect to mark attendance
+        navigate('/attendance');
       }, 2000);
 
       setName('');

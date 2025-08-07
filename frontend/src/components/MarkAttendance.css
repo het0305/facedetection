@@ -1,0 +1,77 @@
+/* Attendance.css */
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.camera-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 2px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.capture-btn {
+  margin-top: 15px;
+  padding: 12px 20px;
+  font-size: 16px;
+  background: linear-gradient(to right, #ff6ec4, #7873f5);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.capture-btn:hover {
+  opacity: 0.9;
+}
+
+.status-text {
+  color: #2c3e50;
+  font-weight: bold;
+  margin-bottom: 15px;
+  background-color: #f0f8ff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.attendance-list {
+  list-style: none;
+  padding-left: 0;
+  max-width: 400px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.attendance-list li {
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #333;
+}
