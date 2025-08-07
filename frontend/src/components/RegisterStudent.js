@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import CameraCapture from './CameraCapture';
-import './Attendance.css'; // same CSS file for all pages
+import './Attendance.css'; 
 
 const RegisterStudent = () => {
   const [name, setName] = useState('');
