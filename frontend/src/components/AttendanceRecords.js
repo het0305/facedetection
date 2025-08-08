@@ -9,7 +9,7 @@ const AttendanceRecords = () => {
     setDownloadUrl('http://localhost:5000/api/download-attendance');
   }, []);
 
-  return (
+  return (<div className='box'>
     <div className="attendance-records-container">
       <h1 className="attendance-title">📊 Attendance Records</h1>
       <p className="attendance-description">
@@ -24,7 +24,7 @@ const AttendanceRecords = () => {
         📥 Download Excel Sheet
       </a>
     </div>
-  );
+ </div> );
 };
 
 export default AttendanceRecords;

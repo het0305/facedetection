@@ -13,7 +13,7 @@ function App() {
         {/* ==== NAVBAR ==== */}
         <div className="navbar">
           <div className="nav-title">
-            📋 Attendance Portal
+            Attendance Portal
           </div>
           <div className="nav-links">
             <Link to="/">Home</Link>

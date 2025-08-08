@@ -1,4 +1,16 @@
 /* ==== Page Layout ==== */
+.box{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  
+  background-color: ;
+  padding: 20px;
+  
+}
 .attendance-records-container {
   padding: 60px 20px;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -8,8 +20,6 @@
   justify-content: center;
   color: #ffffff;
   text-align: center;
-  width: 100%;
-  height: 100vh;
 }
 
 /* ==== Title ==== */

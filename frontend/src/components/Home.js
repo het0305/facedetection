@@ -5,7 +5,7 @@ import './Home.css';
 
 const Home = () => {
   const backgroundStyle = {
-    backgroundImage: 'url(/images/home.webp)',
+    backgroundImage: 'url(/images/10450447.webp)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
