@@ -1,5 +1,4 @@
-/* App.css */
-
+/* ==== Global App ==== */
 .App {
   text-align: center;
   margin: 0;
@@ -8,11 +7,11 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* Main page container */
+/* ==== Page Container ==== */
 .container {
   height: 100vh;
   width: 100vw;
-  background-color: #FFF0F5; /* Light pink background */
+  background: linear-gradient(135deg, #fff0f5, #fbe4ef, #f9dce7);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -27,49 +26,81 @@
   overflow: hidden;
 }
 
-/* Page title */
+/* ==== Page Title ==== */
 .page-title {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   margin-bottom: 40px;
   font-weight: 700;
   text-align: center;
-  text-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(90deg, #ff6cab, #7366ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+  animation: fadeInDown 1s ease;
 }
 
-/* Navbar */
+/* ==== Navbar ==== */
 .navbar {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  background: linear-gradient(to right, #ffffff, #e1a1b7);
-  padding: 15px 40px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  padding: 20px 2px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
+  transition: all 0.3s ease;
 }
 
-/* Navbar title */
+/* ==== Navbar Title ==== */
 .nav-title {
   font-weight: bold;
-  font-size: 24px;
-  color: #0e24a4;
+  font-size: 26px;
+  background: linear-gradient(90deg, #ff6cab, #7366ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+  transition: transform 0.3s ease;
 }
 
-/* Navbar links */
+.nav-title:hover {
+  transform: scale(1.05);
+}
+
+/* ==== Navbar Links ==== */
 .nav-links a {
-  margin-left: 20px;
+  margin-left: 24px;
   text-decoration: none;
-  color: #2d1d36;
   font-weight: 500;
-  transition: color 0.3s ease;
+  color: #2d1d36;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+  padding: 6px 12px;
+  border-radius: 8px;
+  position: relative;
 }
 
-/* Hover effect */
+/* Hover + Active Effects */
 .nav-links a:hover {
-  color: #0000cd;
+  color: #fff;
+  background: linear-gradient(90deg, #ff6cab, #7366ff);
+  box-shadow: 0 4px 12px rgba(115, 102, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.nav-links a.active {
+  background: linear-gradient(90deg, #7366ff, #ff6cab);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255, 108, 171, 0.4);
 }
