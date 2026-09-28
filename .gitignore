@@ -1,1 +1,17 @@
 node_modules
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Biometric / personal data — never commit
+backend/uploads/
+backend/records/
+backend/backups/
+evaluation/
+
+# Build output
+frontend/build/
+coverage/
+!frontend/.env.production

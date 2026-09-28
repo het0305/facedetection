@@ -1,50 +1,44 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const path = require('path');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const { loadModels } = require('./utils/faceUtils');
+// Entry point: validate config -> connect DB -> migrate -> load models -> listen.
+let config;
+try {
+  config = require('./src/config');
+} catch (err) {
+  console.error(err.message);
+  process.exit(1);
+}
+const logger = require('./src/utils/logger');
+const db = require('./src/db');
+const { runMigrations } = require('./src/migrations');
+const { createApp } = require('./src/app');
+const faceEngine = require('./src/services/faceEngine');
+const liveness = require('./src/services/liveness');
+const gallery = require('./src/services/gallery');
+const Admin = require('./src/models/Admin');
 
-// ✅ Load environment variables
-dotenv.config();
+async function main() {
+  await db.connect();
+  logger.info('MongoDB connected');
+  await runMigrations();
+  await Promise.all([faceEngine.init(), liveness.init()]);
+  await gallery.load();
+  if (!(await Admin.exists({}))) {
+    logger.warn('No admin account exists yet. Create one with: npm run create-admin');
+  }
+  const server = createApp().listen(config.PORT, () => logger.info('Server listening', { port: config.PORT }));
 
-// ✅ Connect to MongoDB
-connectDB();
+  const shutdown = (signal) => {
+    logger.info('Shutting down', { signal });
+    server.close(() => db.disconnect().finally(() => process.exit(0)));
+    setTimeout(() => process.exit(1), 10000).unref();
+  };
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
+}
 
-const app = express();
+process.on('unhandledRejection', (err) => logger.error('Unhandled rejection', { err }));
 
-// ✅ Middleware
-app.use(cors());
-app.use(express.json());
-
-// ✅ Serve uploaded images statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// ✅ Serve attendance Excel file for download
-app.get('/api/download-attendance', (req, res) => {
-  const filePath = path.join(__dirname, 'records', 'AttendanceRecords.xlsx');
-  res.download(filePath, (err) => {
-    if (err) {
-      console.error('❌ Error downloading attendance file:', err.message);
-      res.status(500).send('Failed to download attendance file');
-    }
-  });
+main().catch((err) => {
+  logger.error('Startup failed', { err });
+  console.error(`Startup failed: ${err.message}`);
+  process.exit(1);
 });
-
-// ✅ API Routes
-app.use('/api/students', require('./routes/studentRoutes'));
-app.use('/api/attendance', require('./routes/attendanceRoutes'));
-
-// ✅ Load face-api.js models before starting the server
-loadModels()
-  .then(() => {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
-    });
-  })
-  .catch(err => {
-    console.error("❌ Could not load face-api.js models. Exiting...");
-    process.exit(1);
-  });
