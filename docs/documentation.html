@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FaceAttend — Project Documentation</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm 16mm 14mm; }
+  :root { --ink:#0f172a; --ink2:#475569; --ink3:#64748b; --line:#dbe2ea; --blue:#2563eb; --blue-soft:#eff6ff; --green:#15803d; --green-soft:#ecfdf3; --amber:#b45309; --amber-soft:#fffbeb; --red:#b91c1c; --red-soft:#fef2f2; --violet:#6d28d9; --violet-soft:#f5f3ff; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Inter, Arial, sans-serif; color: var(--ink); font-size: 9.8pt; line-height: 1.4; margin: 0; }
+  h1 { font-size: 26pt; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h2 { font-size: 15pt; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--blue); color: var(--ink); }
+  h3 { font-size: 11pt; margin: 10px 0 5px; color: var(--ink); }
+  p { margin: 0 0 8px; }
+  code, .mono { font-family: Consolas, "Cascadia Code", monospace; font-size: 9pt; }
+  code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; }
+  section { page-break-before: always; }
+  section.first { page-break-before: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 5px 0 8px; font-size: 8.5pt; page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+  th { background: #f1f5f9; text-align: left; font-weight: 600; padding: 4px 6px; border: 1px solid var(--line); color: var(--ink2); }
+  td { padding: 3.5px 6px; border: 1px solid var(--line); vertical-align: top; }
+  td:first-child { white-space: nowrap; }
+  .muted { color: var(--ink3); }
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; }
+  .cover .tag { color: var(--blue); font-weight: 700; letter-spacing: .12em; font-size: 9pt; text-transform: uppercase; }
+  .cover .lead { font-size: 13pt; color: var(--ink2); max-width: 150mm; margin-top: 8px; }
+  .cover .meta { margin-top: 28px; color: var(--ink3); font-size: 9.5pt; }
+  .logo { width: 54px; height: 54px; border-radius: 14px; background: var(--blue); display: grid; place-items: center; margin-bottom: 18px; }
+  .toc { margin-top: 30px; columns: 2; font-size: 10pt; }
+  .toc div { margin-bottom: 4px; }
+  .box { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 8px 0; page-break-inside: avoid; }
+  .key { background: var(--blue-soft); border-color: #bfdbfe; }
+  .ok { background: var(--green-soft); border-color: #bbf7d0; }
+  .warn { background: var(--amber-soft); border-color: #fde68a; }
+  .bad { background: var(--red-soft); border-color: #fecaca; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .pill { display: inline-block; padding: 0 7px; border-radius: 99px; font-size: 8pt; font-weight: 600; background: #f1f5f9; color: var(--ink2); }
+  .p-b { background: var(--blue-soft); color: var(--blue); }
+  .p-g { background: var(--green-soft); color: var(--green); }
+  .p-a { background: var(--amber-soft); color: var(--amber); }
+  .p-r { background: var(--red-soft); color: var(--red); }
+  .p-v { background: var(--violet-soft); color: var(--violet); }
+  /* Flow diagram */
+  .flow { display: flex; flex-direction: column; gap: 0; margin: 8px 0; }
+  .step { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; page-break-inside: avoid; }
+  .step .n { position: relative; z-index: 1; width: 26px; height: 26px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 9pt; }
+  .step .b { border-left: 2px solid #bfdbfe; margin-left: -23px; padding: 0 0 10px 23px; }
+  .step:last-child .b { border-left-color: transparent; }
+  .step .t { font-weight: 700; }
+  .step .m { color: var(--ink3); font-size: 8.8pt; }
+  .pipe { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 6px 0 10px; }
+  .pipe span { border: 1px solid var(--line); background: #fff; border-radius: 6px; padding: 3px 7px; font-size: 8.6pt; font-weight: 600; }
+  .pipe i { color: var(--ink3); font-style: normal; }
+  .arch { display: grid; grid-template-columns: 1fr 26px 1fr 26px 1fr; align-items: stretch; margin: 10px 0; }
+  .arch .col { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 8.8pt; }
+  .arch .col b { display: block; margin-bottom: 4px; font-size: 10pt; }
+  .arch .arrow { display: grid; place-items: center; color: var(--ink3); font-size: 16pt; }
+  ul { margin: 4px 0 8px; padding-left: 18px; }
+  li { margin: 2px 0; }
+  .footer-note { font-size: 8.5pt; color: var(--ink3); margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="first cover">
+  <div class="logo"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2m10 0h2a2 2 0 0 1 2 2v2m0 10v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+  <div class="tag">Project documentation</div>
+  <h1>FaceAttend</h1>
+  <div class="lead">Face recognition attendance system with liveness (anti-photo) protection, a kiosk camera screen and an admin console. End-to-end guide: how it works, every module, where it is used, and how to run it.</div>
+  <div class="meta">Version: <b>hardening</b> branch · 28 Sep 2026 · Stack: React + Node.js/Express + MongoDB + TensorFlow.js</div>
+  <div class="toc">
+    <div>1. Quick facts</div>
+    <div>2. How to run</div>
+    <div>3. Architecture (big picture)</div>
+    <div>4. Workflow A — first-time setup</div>
+    <div>5. Workflow B — register a person</div>
+    <div>6. Workflow C — mark attendance (kiosk)</div>
+    <div>7. Workflow D — admin daily work</div>
+    <div>8. Folder map</div>
+    <div>9. Backend modules (what + where used)</div>
+    <div>10. Frontend modules (what + where used)</div>
+    <div>11. Libraries / packages used</div>
+    <div>12. API endpoints</div>
+    <div>13. Database collections</div>
+    <div>14. Important settings (.env)</div>
+    <div>15. Security in short</div>
+    <div>16. Messages &amp; troubleshooting</div>
+    <div>17. Commands cheat-sheet</div>
+    <div>18. Remember it in 60 seconds</div>
+  </div>
+</section>
+
+<!-- 1 QUICK FACTS -->
+<section>
+  <h2>1. Quick facts</h2>
+  <div class="grid2">
+    <div class="box key"><b>What it does</b><br>A camera screen (kiosk) recognizes a registered person, checks they are a <b>real live person</b> (not a photo/phone), and records <b>one attendance per person per day</b>.</div>
+    <div class="box key"><b>Who uses it</b><br><b>Person</b> — stands in front of the kiosk.<br><b>Admin</b> — registers people, views/export attendance, manages kiosks.</div>
+  </div>
+  <table>
+    <tr><th>Part</th><th>Technology</th><th>Folder</th><th>Runs on</th></tr>
+    <tr><td>Frontend (website)</td><td>React 19, react-router 7</td><td><code>frontend/</code></td><td>http://localhost:3000</td></tr>
+    <tr><td>Backend (API)</td><td>Node.js, Express 5</td><td><code>backend/</code></td><td>http://localhost:5000</td></tr>
+    <tr><td>Database</td><td>MongoDB (Mongoose 8)</td><td>—</td><td>mongodb://127.0.0.1:27017/faceattendance</td></tr>
+    <tr><td>Face AI</td><td>@vladmandic/face-api on TensorFlow.js (WASM)</td><td><code>backend/src/services</code></td><td>inside the backend</td></tr>
+    <tr><td>Anti-spoof AI</td><td>MiniFASNet ONNX models + onnxruntime-node</td><td><code>backend/models/antispoof</code></td><td>inside the backend</td></tr>
+  </table>
+
+  <h3>The 4 AI steps (remember "D-E-M-L")</h3>
+  <div class="grid3" style="grid-template-columns:repeat(4,1fr)">
+    <div class="box"><span class="pill p-b">D</span> <b>Detect</b><br><span class="muted">Find faces in the frame (SSD MobileNet v1) + 68 face landmarks.</span></div>
+    <div class="box"><span class="pill p-b">E</span> <b>Embed</b><br><span class="muted">Turn the face into 128 numbers ("face fingerprint").</span></div>
+    <div class="box"><span class="pill p-b">M</span> <b>Match</b><br><span class="muted">Compare with registered people. Distance must be small <b>and</b> clearly better than 2nd best.</span></div>
+    <div class="box"><span class="pill p-b">L</span> <b>Liveness</b><br><span class="muted">Anti-photo model + "turn your head" challenge.</span></div>
+  </div>
+
+  <h3>Golden rules of this project</h3>
+  <ul>
+    <li><b>Unsure = do not mark.</b> "Unable to verify identity" is always better than marking the wrong person.</li>
+    <li><b>Server decides everything.</b> The browser only shows the camera and messages.</li>
+    <li><b>No face photos are stored.</b> Only encrypted 128-number templates.</li>
+    <li><b>One record per person per day</b> — guaranteed by the database (unique index).</li>
+  </ul>
+</section>
+
+<!-- 2 HOW TO RUN -->
+<section>
+  <h2>2. How to run</h2>
+  <div class="box warn"><b>Before you start:</b> MongoDB must be running (on Windows it runs as a service automatically).</div>
+  <div class="grid2">
+    <div class="box"><b>Terminal 1 — Backend</b>
+<pre class="mono" style="margin:6px 0 0">cd C:\Users\vicus\Desktop\facedetection\backend
+npm start</pre>
+      <span class="muted">Wait for: <code>Server listening, port 5000</code></span></div>
+    <div class="box"><b>Terminal 2 — Frontend</b>
+<pre class="mono" style="margin:6px 0 0">cd C:\Users\vicus\Desktop\facedetection\frontend
+npm start</pre>
+      <span class="muted">Wait for: <code>Compiled successfully</code></span></div>
+  </div>
+  <p>Then open <b>http://localhost:3000</b>. Stop a server with <b>Ctrl + C</b>.</p>
+
+  <table>
+    <tr><th>Page</th><th>URL</th><th>Who</th></tr>
+    <tr><td>Home</td><td>http://localhost:3000</td><td>Everyone</td></tr>
+    <tr><td>Admin console</td><td>http://localhost:3000/admin</td><td>Admin (username <code>admin</code> + your password)</td></tr>
+    <tr><td>Kiosk (camera)</td><td>http://localhost:3000/kiosk</td><td>Activated device</td></tr>
+  </table>
+
+  <h3>One-time setup (new computer / fresh clone)</h3>
+<pre class="mono box">cd backend
+npm install
+copy .env.example .env          # fill JWT_SECRET and BIOMETRIC_KEY (commands inside the file)
+npm run create-admin -- admin   # asks for a password (10+ chars, letters + numbers)
+cd ..\frontend
+npm install</pre>
+
+  <h3>Production (single server)</h3>
+<pre class="mono box">cd frontend  &amp;&amp;  npm run build
+cd ..\backend  &amp;&amp;  set NODE_ENV=production  &amp;&amp;  npm start     # everything on :5000 (use HTTPS)</pre>
+  <p class="muted">Browsers allow the camera only on <b>HTTPS</b> or <b>localhost</b>.</p>
+</section>
+
+<!-- 3 ARCHITECTURE -->
+<section>
+  <h2>3. Architecture (big picture)</h2>
+  <div class="arch">
+    <div class="col"><b>Browser (React)</b>Kiosk page captures a camera frame every ~0.3 s and sends it. Admin pages show data. <br><br><span class="muted">frontend/src</span></div>
+    <div class="arrow">&#8644;</div>
+    <div class="col"><b>Backend (Express)</b>Checks login, validates input, runs face AI, liveness, matching, and attendance rules. <br><br><span class="muted">backend/src</span></div>
+    <div class="arrow">&#8644;</div>
+    <div class="col"><b>MongoDB</b>students (encrypted face templates), attendances, admins, devices, auditlogs. <br><br><span class="muted">faceattendance DB</span></div>
+  </div>
+
+  <h3>Request path inside the backend (every API call)</h3>
+  <div class="pipe"><span>server.js</span><i>&#8594;</i><span>app.js</span><i>&#8594;</i><span>helmet / CORS</span><i>&#8594;</i><span>rateLimits</span><i>&#8594;</i><span>security (CSRF)</span><i>&#8594;</i><span>auth (who are you)</span><i>&#8594;</i><span>routes/*</span><i>&#8594;</i><span>validate (zod)</span><i>&#8594;</i><span>services/*</span><i>&#8594;</i><span>models/*</span><i>&#8594;</i><span>MongoDB</span></div>
+  <p class="muted">Any error on the way goes to <b>errorHandler</b>, which returns a friendly message and logs the technical details.</p>
+
+  <h3>Face pipeline for one camera frame</h3>
+  <div class="pipe"><span>upload (memory)</span><i>&#8594;</i><span>imageDecoder</span><i>&#8594;</i><span>faceEngine.detect</span><i>&#8594;</i><span>count faces = 1?</span><i>&#8594;</i><span>quality</span><i>&#8594;</i><span>liveness.passiveScore</span><i>&#8594;</i><span>faceEngine.descriptor</span><i>&#8594;</i><span>gallery.match</span><i>&#8594;</i><span>scanSession (decide)</span><i>&#8594;</i><span>attendanceService</span></div>
+
+  <h3>Startup order (server.js)</h3>
+  <div class="pipe"><span>1. config (read .env)</span><i>&#8594;</i><span>2. db.connect</span><i>&#8594;</i><span>3. migrations</span><i>&#8594;</i><span>4. faceEngine.init + liveness.init</span><i>&#8594;</i><span>5. gallery.load</span><i>&#8594;</i><span>6. listen :5000</span></div>
+</section>
+
+<!-- 4 WORKFLOW A -->
+<section>
+  <h2>4. Workflow A — first-time setup</h2>
+  <div class="flow">
+    <div class="step"><div class="n">1</div><div class="b"><div class="t">Install &amp; configure</div>npm install in both folders; create <code>backend/.env</code> from <code>.env.example</code>.<div class="m">Modules: config/index.js reads .env</div></div></div>
+    <div class="step"><div class="n">2</div><div class="b"><div class="t">Create the admin account</div><code>npm run create-admin -- admin</code><div class="m">Modules: scripts/create-admin.js &#8594; models/Admin.js (password hashed with bcrypt)</div></div></div>
+    <div class="step"><div class="n">3</div><div class="b"><div class="t">Start backend + frontend</div>On start the backend migrates old data, loads AI models and the face gallery.<div class="m">Modules: server.js, db.js, migrations/index.js, faceEngine.js, liveness.js, gallery.js</div></div></div>
+    <div class="step"><div class="n">4</div><div class="b"><div class="t">Sign in</div>Open /admin &#8594; username + password.<div class="m">Frontend: Login.js, AuthContext.js &#8594; API POST /api/auth/login &#8594; routes/auth.js &#8594; middleware/auth.js sets the session cookie</div></div></div>
+    <div class="step"><div class="n">5</div><div class="b"><div class="t">Clean old data</div>Users &#8594; "Possible duplicates" (same person registered many times) and "Needs re-registration".<div class="m">Frontend: Students.js &#8594; GET /api/students/duplicates &#8594; gallery.suspectedDuplicates</div></div></div>
+    <div class="step"><div class="n">6</div><div class="b"><div class="t">Activate the kiosk device</div>On the kiosk PC: sign in, open /kiosk, click <b>Activate this device</b>. The device gets its own token (revocable in Settings).<div class="m">Frontend: Kiosk.js &#8594; POST /api/auth/kiosk/activate &#8594; models/Device.js</div></div></div>
+  </div>
+</section>
+
+<!-- 5 WORKFLOW B -->
+<section>
+  <h2>5. Workflow B — register a person</h2>
+  <p>Admin console &#8594; <b>Register user</b>. Page: <code>pages/admin/RegisterStudent.js</code>.</p>
+  <div class="flow">
+    <div class="step"><div class="n">1</div><div class="b"><div class="t">Enter details</div>Full name + employee/roll number. Checked instantly in the browser and again on the server.<div class="m">Frontend: utils/format.js (validateName, validateRollNo) · Backend: routes/schemas.js</div></div></div>
+    <div class="step"><div class="n">2</div><div class="b"><div class="t">Guided face capture (5 photos)</div>Look straight &#8594; turn slightly left &#8594; turn slightly right &#8594; straight &#8594; straight.<br>Each live frame is sent to the server; a photo is auto-captured after <b>2 good frames in a row</b>.<div class="m">Frontend: components/FaceCapture.js, hooks/useCamera.js &#8594; POST /api/students/check-sample &#8594; enrollmentService.checkSample &#8594; faceAnalysis &#8594; quality.checkPose, liveness</div></div></div>
+    <div class="step"><div class="n">3</div><div class="b"><div class="t">Live guidance messages</div>"Move closer to the camera", "Improve lighting", "Please look directly at the camera", "Only one person should be visible"...<div class="m">Backend: services/quality.js (MESSAGES)</div></div></div>
+    <div class="step"><div class="n">4</div><div class="b"><div class="t">Review &amp; save</div>All photos are sent together. Server re-checks every photo, makes sure all are the same person, and makes 128-number templates.<div class="m">POST /api/students &#8594; routes/students.js &#8594; enrollmentService.buildSamples &#8594; matcher.maxPairwise</div></div></div>
+    <div class="step"><div class="n">5</div><div class="b"><div class="t">Duplicate-face check</div>If this face already belongs to another registered person &#8594; warning <i>"A similar face is already registered. Please verify before continuing."</i> Admin can cancel or confirm (logged in audit).<div class="m">gallery.findSimilar (DUPLICATE_FACE_THRESHOLD) · audit.js</div></div></div>
+    <div class="step"><div class="n">6</div><div class="b"><div class="t">Encrypt &amp; store</div>Templates encrypted with AES-256-GCM and saved. <b>Photos are thrown away.</b> Gallery reloads.<div class="m">utils/biometricCrypto.js &#8594; models/Student.js &#8594; gallery.invalidate</div></div></div>
+    <div class="step"><div class="n">7</div><div class="b"><div class="t">Done</div>"Face registered successfully."</div></div>
+  </div>
+  <div class="box ok"><b>Re-register a face later:</b> Users &#8594; open person &#8594; "Re-register face" (PUT /api/students/:id/face). Same checks, replaces old templates.</div>
+</section>
+
+<!-- 6 WORKFLOW C -->
+<section>
+  <h2>6. Workflow C — mark attendance (kiosk)</h2>
+  <p>Page <code>pages/Kiosk.js</code> sends a frame every ~0.3 s to <code>POST /api/kiosk/scan</code>. The server keeps a <b>scan session</b> (<code>services/scanSession.js</code>) — a state machine that decides step by step.</p>
+  <div class="flow">
+    <div class="step"><div class="n">1</div><div class="b"><div class="t">Looking for face...</div>No face &#8594; keep scanning. More than one face &#8594; <i>"Please ensure only one person is visible."</i> and progress resets.<div class="m">faceAnalysis.analyzeFrame &#8594; faceEngine.detect</div></div></div>
+    <div class="step"><div class="n">2</div><div class="b"><div class="t">Quality check</div>Too small / blurry / dark / bright / turned &#8594; guidance message, frame not counted.<div class="m">quality.assessQuality · faceGeometry.headPose</div></div></div>
+    <div class="step"><div class="n">3</div><div class="b"><div class="t">Passive liveness (anti-photo)</div>Two MiniFASNet models score each good frame (0–1). Mean of 3+ frames must be &#8805; 0.6. Two frames &lt; 0.2 &#8594; <i>"Unable to confirm a live person."</i><div class="m">liveness.passiveScore · faceEngine.antispoofInput</div></div></div>
+    <div class="step"><div class="n">4</div><div class="b"><div class="t">Verifying identity...</div>128-number template compared with everyone. Accept only if distance &#8804; 0.5 <b>and</b> 2nd-best person is &#8805; 0.06 further. Same person on <b>3 frames in a row</b> (5 if not high-confidence). Unknown 4 times &#8594; <i>"Face not recognized."</i><div class="m">faceEngine.descriptor &#8594; gallery.match &#8594; matcher.match</div></div></div>
+    <div class="step"><div class="n">5</div><div class="b"><div class="t">Challenge</div>Random: <i>"Please turn your head slightly to your left/right."</i> (screen is mirrored: your left = screen left). Then <i>"Now look back at the camera."</i> 10 s limit.<div class="m">liveness.Challenge · randomChallengeType</div></div></div>
+    <div class="step"><div class="n">6</div><div class="b"><div class="t">Confirm</div>One more straight frame must match the <b>same</b> person. A different person at any time &#8594; <i>"Unable to verify identity."</i><div class="m">scanSession (CONFIRM phase)</div></div></div>
+    <div class="step"><div class="n">7</div><div class="b"><div class="t">Record attendance</div>Insert one record for today (time zone APP_TIMEZONE). If already there &#8594; <i>"Attendance already marked today."</i> Late after LATE_AFTER time (optional).<div class="m">attendanceService.markAttendance &#8594; models/Attendance.js (unique studentId + dayKey) · utils/time.js</div></div></div>
+    <div class="step"><div class="n">8</div><div class="b"><div class="t">Show result, then continue</div>Green card: name, ID, time, status. After ~4 s the kiosk scans for the next person.<div class="m">Kiosk.js (result card)</div></div></div>
+  </div>
+  <table>
+    <tr><th>Kiosk colour</th><th>Meaning</th></tr>
+    <tr><td><span class="pill">Grey</span></td><td>Looking for face</td></tr>
+    <tr><td><span class="pill p-b">Blue</span></td><td>Verifying / checking liveness (progress bar)</td></tr>
+    <tr><td><span class="pill p-a">Amber</span></td><td>Fix something (lighting, distance, one person only)</td></tr>
+    <tr><td><span class="pill p-v">Violet</span></td><td>Do the challenge (arrow shows direction)</td></tr>
+    <tr><td><span class="pill p-g">Green</span></td><td>Attendance marked</td></tr>
+    <tr><td><span class="pill p-r">Red</span></td><td>Not recognized / not live / failed — nothing recorded</td></tr>
+  </table>
+</section>
+
+<!-- 7 WORKFLOW D -->
+<section>
+  <h2>7. Workflow D — admin daily work</h2>
+  <table>
+    <tr><th>Task</th><th>Where (page)</th><th>API</th><th>Backend module</th></tr>
+    <tr><td>See today's numbers</td><td>Dashboard.js</td><td>GET /api/admin/dashboard</td><td>routes/admin.js</td></tr>
+    <tr><td>Search / filter users</td><td>Students.js</td><td>GET /api/students</td><td>routes/students.js</td></tr>
+    <tr><td>Find duplicate faces</td><td>Students.js (tab)</td><td>GET /api/students/duplicates</td><td>gallery.suspectedDuplicates</td></tr>
+    <tr><td>Edit name / ID</td><td>StudentDetail.js</td><td>PATCH /api/students/:id</td><td>routes/students.js + audit</td></tr>
+    <tr><td>Activate / deactivate user</td><td>StudentDetail.js</td><td>PATCH /api/students/:id</td><td>gallery.invalidate</td></tr>
+    <tr><td>Delete user (keeps history)</td><td>StudentDetail.js</td><td>DELETE /api/students/:id</td><td>routes/students.js + audit</td></tr>
+    <tr><td>View attendance (date, search, status, pages)</td><td>Attendance.js</td><td>GET /api/attendance</td><td>routes/attendance.js</td></tr>
+    <tr><td>Change Present / Late</td><td>Attendance.js</td><td>PATCH /api/attendance/:id</td><td>routes/attendance.js + audit</td></tr>
+    <tr><td>Delete a record</td><td>Attendance.js</td><td>DELETE /api/attendance/:id</td><td>routes/attendance.js + audit</td></tr>
+    <tr><td>Export Excel</td><td>Attendance.js</td><td>GET /api/attendance/export</td><td>exportHandler (ExcelJS)</td></tr>
+    <tr><td>Change password</td><td>Settings.js</td><td>POST /api/auth/change-password</td><td>routes/auth.js</td></tr>
+    <tr><td>Revoke a kiosk</td><td>Settings.js</td><td>PATCH /api/admin/devices/:id</td><td>routes/admin.js</td></tr>
+    <tr><td>Read audit log</td><td>Settings.js</td><td>GET /api/admin/audit</td><td>models/AuditLog.js</td></tr>
+    <tr><td>System status</td><td>Settings.js</td><td>GET /api/admin/system</td><td>faceEngine/liveness status</td></tr>
+    <tr><td>Sign out</td><td>AdminLayout.js</td><td>POST /api/auth/logout</td><td>token revoked (tokenVersion+1)</td></tr>
+  </table>
+</section>
+
+<!-- 8 FOLDER MAP -->
+<section>
+  <h2>8. Folder map</h2>
+<pre class="mono box" style="font-size:8.6pt;line-height:1.5">facedetection/
+├─ README.md                 setup + security + testing guide
+├─ docs/AUDIT.md             audit findings + every change made
+├─ backend/
+│  ├─ server.js              START HERE: boots everything
+│  ├─ .env / .env.example    settings and secrets (never commit .env)
+│  ├─ models/antispoof/      MiniFASNetV2.onnx, MiniFASNetV1SE.onnx
+│  ├─ scripts/               create-admin, evaluate, rotate-keys, ...
+│  ├─ test/                  58 automated tests
+│  └─ src/
+│     ├─ app.js              Express app: middleware + routes
+│     ├─ db.js               MongoDB connection
+│     ├─ config/index.js     reads + validates .env
+│     ├─ middleware/         auth, security(CSRF), upload, validate, rateLimits, errorHandler
+│     ├─ routes/             auth, kiosk, students, attendance, admin, schemas
+│     ├─ services/           face AI + business logic (see section 9)
+│     ├─ models/             Student, Attendance, Admin, Device, AuditLog
+│     ├─ migrations/         upgrades old data automatically
+│     └─ utils/              logger, errors, time, biometricCrypto
+└─ frontend/
+   ├─ public/                index.html, favicon.svg
+   └─ src/
+      ├─ index.js, App.js    entry + all routes (URLs)
+      ├─ api/client.js       every call to the backend
+      ├─ auth/AuthContext.js who is signed in, RequireAdmin
+      ├─ hooks/useCamera.js  camera start/stop/capture
+      ├─ components/         ui.js (icons, buttons, dialogs), FaceCapture.js
+      ├─ pages/              Home, Login, Kiosk
+      ├─ pages/admin/        AdminLayout, Dashboard, Students, StudentDetail,
+      │                      RegisterStudent, Attendance, Settings
+      ├─ utils/format.js     dates + form validation
+      └─ styles/             app.css, kiosk.css (+ index.css tokens)</pre>
+</section>
+
+<!-- 9 BACKEND MODULES -->
+<section>
+  <h2>9. Backend modules — what it does &amp; where it is used</h2>
+  <h3>Core</h3>
+  <table>
+    <tr><th>Module</th><th>What it does (short)</th><th>Used by</th></tr>
+    <tr><td>server.js</td><td>Entry point. Boot order: config &#8594; DB &#8594; migrate &#8594; AI models &#8594; gallery &#8594; listen.</td><td><code>npm start</code></td></tr>
+    <tr><td>src/app.js</td><td>Builds Express app: helmet, CORS, JSON limit, cookies, CSRF, auth, routes, error handler, serves React build.</td><td>server.js, all API tests</td></tr>
+    <tr><td>src/config/index.js</td><td>Reads <code>.env</code>, checks every value (zod), gives defaults. Only place that reads env.</td><td>Almost every module</td></tr>
+    <tr><td>src/db.js</td><td>Connects to MongoDB, logs disconnect/reconnect.</td><td>server.js, create-admin, tests</td></tr>
+    <tr><td>src/migrations/index.js</td><td>Upgrades old data (plain embeddings &#8594; encrypted samples; old attendance &#8594; dayKey). Builds indexes. Safe to run every start.</td><td>server.js, tests</td></tr>
+  </table>
+
+  <h3>Middleware (runs before routes)</h3>
+  <table>
+    <tr><th>Module</th><th>What it does</th><th>Used by</th></tr>
+    <tr><td>middleware/auth.js</td><td>Reads session cookies. Sets <code>req.admin</code> / <code>req.device</code>. <code>requireAdmin</code>, <code>requireKioskOrAdmin</code>, issue/clear cookies.</td><td>app.js, all routes</td></tr>
+    <tr><td>middleware/security.js</td><td>CSRF guard: POST/PATCH/PUT/DELETE need header <code>X-Requested-With</code> + allowed Origin.</td><td>app.js</td></tr>
+    <tr><td>middleware/upload.js</td><td>Multer: images kept in memory only, max 2 MB, JPEG/PNG only.</td><td>routes/kiosk.js, routes/students.js</td></tr>
+    <tr><td>middleware/validate.js</td><td>Checks body/query/params with zod &#8594; <code>req.valid</code>.</td><td>all routes</td></tr>
+    <tr><td>middleware/rateLimits.js</td><td>Limits: login 20 / 15 min, scan 600 / min, API 600 / min per IP.</td><td>app.js, routes/auth.js, routes/kiosk.js</td></tr>
+    <tr><td>middleware/errorHandler.js</td><td>Turns any error into a friendly JSON message; logs details + request id.</td><td>app.js</td></tr>
+  </table>
+
+  <h3>Routes (API endpoints — details in section 12)</h3>
+  <table>
+    <tr><th>Module</th><th>What it does</th><th>Mounted at</th></tr>
+    <tr><td>routes/auth.js</td><td>Login, logout, me, change password, activate/deactivate kiosk. Account lockout.</td><td>/api/auth</td></tr>
+    <tr><td>routes/kiosk.js</td><td>Receives camera frames, runs the scan session, returns state.</td><td>/api/kiosk</td></tr>
+    <tr><td>routes/students.js</td><td>Check sample, register, list, detail, edit, re-register face, delete, duplicates.</td><td>/api/students</td></tr>
+    <tr><td>routes/attendance.js</td><td>List/filter, edit status, delete, Excel export.</td><td>/api/attendance (+ /api/download-attendance)</td></tr>
+    <tr><td>routes/admin.js</td><td>Dashboard numbers, devices, audit log, system status.</td><td>/api/admin</td></tr>
+    <tr><td>routes/schemas.js</td><td>Shared rules: name, roll no, id, date, paging, safe regex.</td><td>students, attendance, admin routes</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>9. Backend modules (continued)</h2>
+  <h3>Services — face AI &amp; business logic</h3>
+  <table>
+    <tr><th>Module</th><th>What it does</th><th>Used by</th></tr>
+    <tr><td>services/imageDecoder.js</td><td>Checks file really is JPEG/PNG (magic bytes), size limits, decodes to pixels.</td><td>faceEngine.js</td></tr>
+    <tr><td>services/faceEngine.js</td><td>Loads face-api models (WASM/TensorFlow). <code>detect</code>, <code>descriptor</code> (128 numbers), <code>pixelStats</code> (blur/light), <code>antispoofInput</code>. One-at-a-time queue, frees memory.</td><td>faceAnalysis, server.js, admin route, scripts</td></tr>
+    <tr><td>services/faceGeometry.js</td><td>From 68 landmarks: head turn (yaw), tilt (roll), up/down (pitch), eye openness (EAR); box overlap (IoU).</td><td>faceEngine, scanSession</td></tr>
+    <tr><td>services/quality.js</td><td>Face quality rules + user messages; pose check for registration (front/left/right).</td><td>faceAnalysis, enrollmentService</td></tr>
+    <tr><td>services/liveness.js</td><td>Passive anti-spoof (2 ONNX models) + <code>Challenge</code> (turn left/right, blink).</td><td>faceAnalysis, scanSession, server.js</td></tr>
+    <tr><td>services/faceAnalysis.js</td><td>One pass per frame: detect &#8594; count &#8594; quality &#8594; liveness &#8594; descriptor (skips expensive steps when not needed).</td><td>routes/kiosk.js, enrollmentService, evaluate script</td></tr>
+    <tr><td>services/matcher.js</td><td>Pure maths: distance, match with threshold + margin, find similar, centroid.</td><td>gallery, enrollmentService, scanSession, evaluate</td></tr>
+    <tr><td>services/gallery.js</td><td>Keeps all active templates decrypted in memory for fast matching; duplicate finder.</td><td>server.js, kiosk/students/admin routes</td></tr>
+    <tr><td>services/scanSession.js</td><td>Kiosk state machine (SEARCH &#8594; CHALLENGE &#8594; CONFIRM &#8594; DONE) + session store.</td><td>routes/kiosk.js</td></tr>
+    <tr><td>services/enrollmentService.js</td><td>Validates registration photos, builds templates, checks same person.</td><td>routes/students.js</td></tr>
+    <tr><td>services/attendanceService.js</td><td>One check-in per day, Late rule, cooldown, handles duplicate safely.</td><td>routes/kiosk.js</td></tr>
+    <tr><td>services/audit.js</td><td>Writes audit events (who did what, when).</td><td>all routes</td></tr>
+  </table>
+
+  <h3>Models (MongoDB)</h3>
+  <table>
+    <tr><th>Module</th><th>Stores</th><th>Used by</th></tr>
+    <tr><td>models/Student.js</td><td>Person + encrypted face samples (hidden by default).</td><td>students/admin routes, gallery, migrations</td></tr>
+    <tr><td>models/Attendance.js</td><td>Check-ins (unique per person per day).</td><td>attendanceService, attendance/admin/students routes</td></tr>
+    <tr><td>models/Admin.js</td><td>Admin login (bcrypt hash, lockout, tokenVersion).</td><td>auth middleware/route, create-admin, server.js</td></tr>
+    <tr><td>models/Device.js</td><td>Activated kiosks.</td><td>auth, kiosk, admin routes</td></tr>
+    <tr><td>models/AuditLog.js</td><td>Audit trail.</td><td>audit.js, admin route</td></tr>
+  </table>
+
+  <h3>Utils</h3>
+  <table>
+    <tr><th>Module</th><th>What it does</th><th>Used by</th></tr>
+    <tr><td>utils/logger.js</td><td>JSON logs; hides passwords, tokens, face data automatically.</td><td>most modules</td></tr>
+    <tr><td>utils/errors.js</td><td>AppError + helpers (badRequest, unauthorized, notFound, conflict).</td><td>middleware, routes, services</td></tr>
+    <tr><td>utils/time.js</td><td>Day key (YYYY-MM-DD) in APP_TIMEZONE, Late check.</td><td>attendanceService, routes, migrations</td></tr>
+    <tr><td>utils/biometricCrypto.js</td><td>AES-256-GCM encrypt/decrypt of face templates.</td><td>students route, gallery, migrations</td></tr>
+  </table>
+
+</section>
+
+<section>
+  <h2>9. Backend scripts (run with npm)</h2>
+  <table>
+    <tr><th>Command</th><th>File</th><th>Purpose</th></tr>
+    <tr><td>npm run create-admin -- admin</td><td>scripts/create-admin.js</td><td>Create admin / reset password</td></tr>
+    <tr><td>npm run models</td><td>scripts/download-models.js</td><td>Download + verify anti-spoof models</td></tr>
+    <tr><td>npm run evaluate -- &lt;dataset&gt;</td><td>scripts/evaluate.js</td><td>Accuracy report: FAR, FRR, TAR, threshold</td></tr>
+    <tr><td>npm run evaluate-liveness -- ...</td><td>scripts/evaluate-liveness.js</td><td>Spoof report: APCER, BPCER</td></tr>
+    <tr><td>npm run probe -- &lt;folder&gt;</td><td>scripts/probe-images.js</td><td>Quality/liveness numbers per image</td></tr>
+    <tr><td>npm run rotate-keys</td><td>scripts/rotate-keys.js</td><td>New secrets, re-encrypt templates</td></tr>
+  </table>
+</section>
+
+<!-- 10 FRONTEND -->
+<section>
+  <h2>10. Frontend modules — what it does &amp; where it is used</h2>
+  <table>
+    <tr><th>Module</th><th>What it does</th><th>Used by</th></tr>
+    <tr><td>src/index.js</td><td>Starts React, loads CSS.</td><td>browser</td></tr>
+    <tr><td>src/App.js</td><td>All URLs (routes) + redirects from old URLs (/register, /attendance, /records).</td><td>index.js, tests</td></tr>
+    <tr><td>api/client.js</td><td>Every backend call (fetch). Adds CSRF header, sends cookies, turns errors into friendly messages.</td><td>all pages, AuthContext, FaceCapture</td></tr>
+    <tr><td>auth/AuthContext.js</td><td>Knows who is signed in (admin / kiosk). login, logout, <code>RequireAdmin</code> guard.</td><td>App.js, Login, Kiosk, AdminLayout</td></tr>
+    <tr><td>hooks/useCamera.js</td><td>Starts camera, friendly camera errors, captures un-mirrored JPEG frames.</td><td>Kiosk.js, FaceCapture.js</td></tr>
+    <tr><td>components/ui.js</td><td>Icon, Spinner, Notice, Pill, EmptyState, Pagination, Modal, ConfirmDialog.</td><td>all pages</td></tr>
+    <tr><td>components/FaceCapture.js</td><td>Guided 5-pose capture with live server checks and auto-capture.</td><td>RegisterStudent, StudentDetail</td></tr>
+    <tr><td>utils/format.js</td><td>Date/time formatting in server time zone; name/ID validation.</td><td>admin pages</td></tr>
+    <tr><td>pages/Home.js</td><td>Landing: Kiosk or Admin console.</td><td>route /</td></tr>
+    <tr><td>pages/Login.js</td><td>Admin sign-in form.</td><td>route /login</td></tr>
+    <tr><td>pages/Kiosk.js</td><td>Camera screen: scan loop, face box, status, challenge arrow, result card, clock, device activation.</td><td>route /kiosk</td></tr>
+    <tr><td>pages/admin/AdminLayout.js</td><td>Sidebar menu, sign out, loads system info (time zone).</td><td>route /admin/*</td></tr>
+    <tr><td>pages/admin/Dashboard.js</td><td>Active / present / late / absent, today's check-ins, last 7 days, warnings.</td><td>/admin</td></tr>
+    <tr><td>pages/admin/Students.js</td><td>User list: search, status filter, re-register tab, duplicates tab, paging.</td><td>/admin/students</td></tr>
+    <tr><td>pages/admin/StudentDetail.js</td><td>Edit, activate/deactivate, re-register face, delete (confirm), recent attendance.</td><td>/admin/students/:id</td></tr>
+    <tr><td>pages/admin/RegisterStudent.js</td><td>Wizard: details &#8594; capture &#8594; review &#8594; done; duplicate warning.</td><td>/admin/students/new</td></tr>
+    <tr><td>pages/admin/Attendance.js</td><td>Records: date/search/status filters, edit status, delete, export Excel.</td><td>/admin/attendance</td></tr>
+    <tr><td>pages/admin/Settings.js</td><td>Change password, kiosk devices, audit log, system status.</td><td>/admin/settings</td></tr>
+    <tr><td>styles/app.css, kiosk.css, index.css</td><td>Design: colours, layout, tables, kiosk dark theme, mobile.</td><td>index.js, Kiosk.js</td></tr>
+    <tr><td>App.test.js, setupTests.js</td><td>9 UI tests (routing, login error, guards, API client, validation).</td><td><code>npm test</code></td></tr>
+  </table>
+</section>
+
+<!-- 11 PACKAGES -->
+<section>
+  <h2>11. Libraries / packages used</h2>
+  <h3>Backend (backend/package.json)</h3>
+  <table>
+    <tr><th>Package</th><th>Why</th><th>Used in</th></tr>
+    <tr><td>express</td><td>Web server / API</td><td>app.js, routes</td></tr>
+    <tr><td>mongoose</td><td>MongoDB models + queries</td><td>models, db.js, routes, services</td></tr>
+    <tr><td>@vladmandic/face-api</td><td>Face detection, 68 landmarks, 128-d descriptor</td><td>faceEngine.js</td></tr>
+    <tr><td>@tensorflow/tfjs + tfjs-backend-wasm</td><td>Runs the face models fast on CPU (WASM)</td><td>faceEngine.js</td></tr>
+    <tr><td>onnxruntime-node</td><td>Runs anti-spoof ONNX models</td><td>liveness.js</td></tr>
+    <tr><td>jpeg-js, pngjs</td><td>Safe pure-JS image decoding</td><td>imageDecoder.js</td></tr>
+    <tr><td>multer</td><td>Receive uploaded frames (memory)</td><td>middleware/upload.js</td></tr>
+    <tr><td>zod</td><td>Validate .env and every request</td><td>config, validate, routes</td></tr>
+    <tr><td>jsonwebtoken</td><td>Signed session tokens</td><td>middleware/auth.js</td></tr>
+    <tr><td>bcryptjs</td><td>Password hashing</td><td>routes/auth.js, create-admin</td></tr>
+    <tr><td>cookie-parser</td><td>Read session cookies</td><td>app.js</td></tr>
+    <tr><td>helmet</td><td>Security headers + CSP</td><td>app.js</td></tr>
+    <tr><td>cors</td><td>Allowed browser origins</td><td>app.js</td></tr>
+    <tr><td>express-rate-limit</td><td>Brute-force / flood protection</td><td>rateLimits.js</td></tr>
+    <tr><td>exceljs</td><td>Excel export</td><td>routes/attendance.js</td></tr>
+    <tr><td>dotenv</td><td>Load .env file</td><td>config/index.js</td></tr>
+    <tr><td>supertest (dev), nodemon (dev)</td><td>API tests; auto-restart in dev</td><td>test/, <code>npm run dev</code></td></tr>
+  </table>
+  <h3>Frontend (frontend/package.json)</h3>
+  <table>
+    <tr><th>Package</th><th>Why</th><th>Used in</th></tr>
+    <tr><td>react, react-dom</td><td>UI</td><td>everywhere</td></tr>
+    <tr><td>react-router-dom</td><td>Pages / URLs</td><td>App.js, pages</td></tr>
+    <tr><td>react-scripts</td><td>Dev server, build, tests (Create React App)</td><td>npm start / build / test</td></tr>
+    <tr><td>@testing-library/*</td><td>UI tests</td><td>App.test.js</td></tr>
+  </table>
+  <p class="muted">Browser features (no library): <code>getUserMedia</code> for the camera, <code>fetch</code> for API calls, canvas for frame capture.</p>
+  <h3>AI models</h3>
+  <table>
+    <tr><th>Model</th><th>Job</th><th>File / source</th></tr>
+    <tr><td>SSD MobileNet v1</td><td>Find faces</td><td>inside @vladmandic/face-api/model</td></tr>
+    <tr><td>Face Landmark 68</td><td>68 points (eyes, nose, jaw) &#8594; pose, alignment</td><td>inside @vladmandic/face-api/model</td></tr>
+    <tr><td>Face Recognition (ResNet)</td><td>128-number face template</td><td>inside @vladmandic/face-api/model</td></tr>
+    <tr><td>MiniFASNetV2 + MiniFASNetV1SE</td><td>Real face vs photo/screen</td><td>backend/models/antispoof (Silent-Face, Apache-2.0)</td></tr>
+  </table>
+</section>
+
+<!-- 12 API -->
+<section>
+  <h2>12. API endpoints</h2>
+  <p class="muted">All under <code>/api</code>. "Admin" = signed-in admin cookie. "Kiosk" = activated device cookie. Non-GET calls need header <code>X-Requested-With: XMLHttpRequest</code>.</p>
+  <table>
+    <tr><th>Method + path</th><th>Who</th><th>Does</th></tr>
+    <tr><td>GET /health</td><td>anyone</td><td>Server alive check</td></tr>
+    <tr><td>POST /auth/login</td><td>anyone</td><td>Sign in (sets cookie)</td></tr>
+    <tr><td>POST /auth/logout</td><td>anyone</td><td>Sign out + revoke token</td></tr>
+    <tr><td>GET /auth/me</td><td>anyone</td><td>Who am I (admin / kiosk / none)</td></tr>
+    <tr><td>POST /auth/change-password</td><td>Admin</td><td>Change password</td></tr>
+    <tr><td>POST /auth/kiosk/activate</td><td>Admin</td><td>Make this browser a kiosk</td></tr>
+    <tr><td>POST /auth/kiosk/deactivate</td><td>Kiosk</td><td>Remove kiosk mode</td></tr>
+    <tr><td>POST /kiosk/scan</td><td>Kiosk or Admin</td><td>Send one frame (+ sessionId) &#8594; state, message, face box, result</td></tr>
+    <tr><td>POST /students/check-sample</td><td>Admin</td><td>Check one registration frame (nothing saved)</td></tr>
+    <tr><td>POST /students</td><td>Admin</td><td>Register (name, rollNo, poses, 3–8 images)</td></tr>
+    <tr><td>GET /students</td><td>Admin</td><td>List (search, status, needsReenroll, page)</td></tr>
+    <tr><td>GET /students/duplicates</td><td>Admin</td><td>Pairs of similar faces</td></tr>
+    <tr><td>GET /students/:id</td><td>Admin</td><td>Details + recent attendance</td></tr>
+    <tr><td>PATCH /students/:id</td><td>Admin</td><td>Edit name / rollNo / active</td></tr>
+    <tr><td>PUT /students/:id/face</td><td>Admin</td><td>Replace face samples</td></tr>
+    <tr><td>DELETE /students/:id</td><td>Admin</td><td>Delete person (history kept)</td></tr>
+    <tr><td>GET /attendance</td><td>Admin</td><td>List (from, to, search, status, studentId, page)</td></tr>
+    <tr><td>GET /attendance/export</td><td>Admin</td><td>Excel file</td></tr>
+    <tr><td>PATCH /attendance/:id</td><td>Admin</td><td>Set Present / Late</td></tr>
+    <tr><td>DELETE /attendance/:id</td><td>Admin</td><td>Delete record</td></tr>
+    <tr><td>GET /download-attendance</td><td>Admin</td><td>Old URL: today's Excel</td></tr>
+    <tr><td>GET /admin/dashboard</td><td>Admin</td><td>Dashboard numbers</td></tr>
+    <tr><td>GET /admin/devices, PATCH /admin/devices/:id</td><td>Admin</td><td>List / revoke kiosks</td></tr>
+    <tr><td>GET /admin/audit</td><td>Admin</td><td>Audit log (category, page)</td></tr>
+    <tr><td>GET /admin/system</td><td>Admin</td><td>Engine, liveness, thresholds, time zone</td></tr>
+  </table>
+  <h3>Kiosk scan states (returned by POST /kiosk/scan)</h3>
+  <p><span class="pill">NO_FACE</span> <span class="pill p-a">QUALITY</span> <span class="pill p-a">MULTIPLE_FACES</span> <span class="pill p-b">VERIFYING</span> <span class="pill p-b">CHECKING_LIVENESS</span> <span class="pill p-v">CHALLENGE</span> <span class="pill p-g">MARKED</span> <span class="pill p-g">ALREADY_MARKED</span> <span class="pill p-r">UNKNOWN</span> <span class="pill p-r">UNVERIFIED</span> <span class="pill p-r">SPOOF</span> <span class="pill p-r">LIVENESS_FAILED</span> <span class="pill p-r">TIMEOUT</span> <span class="pill p-r">ERROR</span></p>
+</section>
+
+<!-- 13 DB -->
+<section>
+  <h2>13. Database collections (MongoDB: faceattendance)</h2>
+  <table>
+    <tr><th>Collection</th><th>Main fields</th><th>Indexes / rules</th></tr>
+    <tr><td>students</td><td>name, rollNo, active, samples[] (encrypted template, pose, quality, liveness), sampleCount, hasLegacySample, createdAt</td><td>rollNo unique · samples hidden from queries</td></tr>
+    <tr><td>attendances</td><td>studentId, studentName, rollNo (snapshot), dayKey, checkInAt (UTC), status (Present/Late), source, verification {distance, confidence, liveness, challenge}, deviceId</td><td><b>(studentId + dayKey) unique</b> = no duplicates</td></tr>
+    <tr><td>admins</td><td>username, passwordHash (bcrypt), role, active, tokenVersion, failedLogins, lockUntil, lastLoginAt</td><td>username unique</td></tr>
+    <tr><td>devices</td><td>name, active, createdBy, lastSeenAt</td><td>—</td></tr>
+    <tr><td>auditlogs</td><td>action, category (admin/auth/security), actor, target, details, ip, createdAt</td><td>createdAt, category</td></tr>
+  </table>
+  <div class="box warn"><b>Never stored:</b> face photos, raw camera frames, plain passwords, unencrypted face templates.</div>
+</section>
+
+<!-- 14 SETTINGS -->
+<section>
+  <h2>14. Important settings (backend/.env)</h2>
+  <table>
+    <tr><th>Setting</th><th>Default</th><th>Meaning (easy words)</th></tr>
+    <tr><td>MONGO_URI</td><td>mongodb://127.0.0.1:27017/faceattendance</td><td>Database address</td></tr>
+    <tr><td>JWT_SECRET</td><td>(secret)</td><td>Signs login cookies. Change = everyone logged out</td></tr>
+    <tr><td>BIOMETRIC_KEY</td><td>(secret)</td><td>Encrypts face templates. <b>Back it up!</b> Lost = re-register all</td></tr>
+    <tr><td>APP_TIMEZONE</td><td>system (Asia/Kolkata)</td><td>When a new day starts</td></tr>
+    <tr><td>LATE_AFTER</td><td>empty</td><td>e.g. 09:30 &#8594; later check-ins = Late</td></tr>
+    <tr><td>RECOGNITION_THRESHOLD</td><td>0.5</td><td>Max face distance to accept (lower = stricter)</td></tr>
+    <tr><td>HIGH_CONFIDENCE_THRESHOLD</td><td>0.4</td><td>Very close match = fewer frames needed</td></tr>
+    <tr><td>RECOGNITION_MIN_MARGIN</td><td>0.06</td><td>Must beat 2nd-best person by this much</td></tr>
+    <tr><td>STABLE_FRAMES</td><td>3</td><td>Same person on this many frames</td></tr>
+    <tr><td>DUPLICATE_FACE_THRESHOLD</td><td>0.42</td><td>Registration warning if closer than this</td></tr>
+    <tr><td>LIVENESS_THRESHOLD</td><td>0.6</td><td>Anti-photo score needed (0–1)</td></tr>
+    <tr><td>CHALLENGE_TYPES</td><td>turn_left,turn_right</td><td>Which challenges to ask</td></tr>
+    <tr><td>CHALLENGE_TURN_DELTA / TIMEOUT_MS</td><td>0.15 / 10000</td><td>How much to turn / time allowed</td></tr>
+    <tr><td>MIN_FACE_SIZE_PX</td><td>90</td><td>Smaller face = "Move closer"</td></tr>
+    <tr><td>MIN_SHARPNESS / MIN_BRIGHTNESS / MAX_BRIGHTNESS</td><td>20 / 55 / 205</td><td>Blur and lighting limits</td></tr>
+    <tr><td>ATTENDANCE_COOLDOWN_SEC</td><td>60</td><td>Ignore repeat scans of same person</td></tr>
+    <tr><td>ADMIN_SESSION_HOURS / KIOSK_SESSION_DAYS</td><td>8 / 30</td><td>How long logins last</td></tr>
+  </table>
+  <p class="muted">Full list with comments: <code>backend/.env.example</code>. Measure thresholds with <code>npm run evaluate</code> before real use.</p>
+</section>
+
+<!-- 15 SECURITY -->
+<section>
+  <h2>15. Security in short</h2>
+  <div class="grid2">
+    <div class="box"><b>Login</b><ul><li>bcrypt password hash</li><li>httpOnly + SameSite=Strict cookie (8 h)</li><li>5 wrong tries &#8594; locked 15 min</li><li>Logout revokes the token on the server</li></ul></div>
+    <div class="box"><b>Kiosk</b><ul><li>Own device token, only for scanning</li><li>Cannot open admin pages</li><li>Revoke anytime in Settings</li></ul></div>
+    <div class="box"><b>Requests</b><ul><li>CSRF header + Origin check</li><li>zod validation (no NoSQL injection)</li><li>Rate limits, 20 kB JSON limit</li><li>Helmet headers + CSP</li></ul></div>
+    <div class="box"><b>Uploads</b><ul><li>Memory only, never saved to disk</li><li>Magic-byte check (real JPEG/PNG)</li><li>Size + resolution limits</li></ul></div>
+    <div class="box"><b>Biometric data</b><ul><li>AES-256-GCM encrypted templates</li><li>Never sent to the browser</li><li>No face photos stored</li></ul></div>
+    <div class="box"><b>Logs &amp; audit</b><ul><li>Passwords/tokens/face data auto-hidden</li><li>Audit log: register, delete, export, overrides, failed logins, spoof attempts</li></ul></div>
+  </div>
+  <div class="box bad"><b>Limits (be honest):</b> one normal webcam cannot stop 100% of attacks (e.g. high-quality 3D masks or hacked video input). It stops printed photos, phone/monitor screens and simple replays.</div>
+</section>
+
+<!-- 16 TROUBLESHOOTING -->
+<section>
+  <h2>16. Messages &amp; troubleshooting</h2>
+  <table>
+    <tr><th>You see</th><th>Why</th><th>Do this</th></tr>
+    <tr><td>Face not recognized.</td><td>Not registered, or too different from samples</td><td>Register / re-register the person</td></tr>
+    <tr><td>Unable to verify identity.</td><td>Two registered people look alike (often duplicates)</td><td>Users &#8594; Possible duplicates &#8594; delete extras</td></tr>
+    <tr><td>Unable to confirm a live person.</td><td>Anti-photo score low (photo/screen, or bad light)</td><td>Real face, better light, no glare</td></tr>
+    <tr><td>Liveness check was not completed.</td><td>Head-turn not done in time</td><td>Turn a little to the named side, then look back</td></tr>
+    <tr><td>Move closer / Move back a little.</td><td>Face too small / too big</td><td>Stand ~50–80 cm from camera</td></tr>
+    <tr><td>Lighting is too low / too bright.</td><td>Dark room / light behind or on face</td><td>Face the light, avoid backlight</td></tr>
+    <tr><td>Please ensure only one person is visible.</td><td>2+ faces</td><td>One person at a time</td></tr>
+    <tr><td>Unable to access the camera...</td><td>Permission denied / camera busy</td><td>Allow camera in browser; close other camera apps</td></tr>
+    <tr><td>This device is not activated</td><td>No kiosk token</td><td>Admin signs in on kiosk &#8594; Activate</td></tr>
+    <tr><td>Invalid username or password.</td><td>Wrong login</td><td><code>npm run create-admin -- admin</code> resets it</td></tr>
+    <tr><td>Port 5000/3000 already in use</td><td>Server already running</td><td>Close the other terminal / process</td></tr>
+    <tr><td>Startup failed: Invalid configuration</td><td>Bad/missing .env value</td><td>Compare with .env.example</td></tr>
+    <tr><td>Could not decrypt biometric samples</td><td>BIOMETRIC_KEY changed/lost</td><td>Restore .env backup, else re-register</td></tr>
+  </table>
+</section>
+
+<!-- 17 COMMANDS -->
+<section>
+  <h2>17. Commands cheat-sheet</h2>
+  <table>
+    <tr><th>Folder</th><th>Command</th><th>Does</th></tr>
+    <tr><td>backend</td><td>npm start</td><td>Run API (port 5000)</td></tr>
+    <tr><td>backend</td><td>npm run dev</td><td>Run with auto-restart (nodemon)</td></tr>
+    <tr><td>backend</td><td>npm test</td><td>58 backend tests</td></tr>
+    <tr><td>backend</td><td>npm run create-admin -- admin</td><td>Create / reset admin</td></tr>
+    <tr><td>backend</td><td>npm run evaluate -- &lt;dataset&gt;</td><td>Accuracy report</td></tr>
+    <tr><td>backend</td><td>npm run evaluate-liveness -- --live &lt;dir&gt; --spoof &lt;dir&gt;</td><td>Anti-spoof report</td></tr>
+    <tr><td>backend</td><td>npm run probe -- &lt;folder&gt;</td><td>Quality numbers per photo</td></tr>
+    <tr><td>backend</td><td>npm run rotate-keys</td><td>New secrets + re-encrypt</td></tr>
+    <tr><td>backend</td><td>npm run models</td><td>Verify anti-spoof models</td></tr>
+    <tr><td>frontend</td><td>npm start</td><td>Run website (port 3000)</td></tr>
+    <tr><td>frontend</td><td>npm test</td><td>9 UI tests</td></tr>
+    <tr><td>frontend</td><td>npm run build</td><td>Production build (served by backend)</td></tr>
+  </table>
+
+  <h3>Testing checklist (manual, on the real camera)</h3>
+  <ul>
+    <li>Registered person &#8594; marked in ~3–5 s; again &#8594; "already marked"</li>
+    <li>Unregistered person &#8594; "Face not recognized", nothing saved</li>
+    <li>Printed photo / phone photo / video &#8594; never marked</li>
+    <li>Two people in view &#8594; "only one person"</li>
+    <li>Stand 30 s in front of camera &#8594; still exactly one record</li>
+    <li>Dark room, glasses, far/near &#8594; guidance, never a wrong name</li>
+  </ul>
+</section>
+
+<!-- 18 REMEMBER -->
+<section>
+  <h2>18. Remember it in 60 seconds</h2>
+  <div class="box key" style="font-size:11pt">
+    <b>1 sentence:</b> React kiosk sends frames &#8594; Express backend runs <b>Detect &#8594; Quality &#8594; Liveness &#8594; Embed &#8594; Match &#8594; Challenge &#8594; Confirm</b> &#8594; MongoDB saves <b>one record per person per day</b>.
+  </div>
+  <div class="grid2">
+    <div class="box"><b>3 folders to know</b><ul><li><code>backend/src/services</code> = the brain</li><li><code>backend/src/routes</code> = the doors (API)</li><li><code>frontend/src/pages</code> = the screens</li></ul></div>
+    <div class="box"><b>3 most important files</b><ul><li><code>scanSession.js</code> = kiosk decision</li><li><code>matcher.js</code> = who is it?</li><li><code>liveness.js</code> = is it real?</li></ul></div>
+    <div class="box"><b>3 numbers</b><ul><li><b>0.5</b> max face distance</li><li><b>0.06</b> margin over 2nd best</li><li><b>3</b> stable frames</li></ul></div>
+    <div class="box"><b>3 secrets</b><ul><li><code>.env</code> never in git</li><li>BIOMETRIC_KEY = back up</li><li>No face photos stored</li></ul></div>
+  </div>
+  <h3>Memory trick for the kiosk flow: "<b>L-Q-V-C-C-M</b>"</h3>
+  <p><b>L</b>ook (find face) &#8594; <b>Q</b>uality &#8594; <b>V</b>erify (liveness + identity) &#8594; <b>C</b>hallenge (turn head) &#8594; <b>C</b>onfirm &#8594; <b>M</b>ark.</p>
+  <h3>Memory trick for registration: "<b>D-5-R-S</b>"</h3>
+  <p><b>D</b>etails &#8594; <b>5</b> guided photos &#8594; <b>R</b>eview (duplicate check) &#8594; <b>S</b>ave encrypted.</p>
+  <p class="footer-note">More detail: README.md (setup, security, testing) and docs/AUDIT.md (audit findings and all changes).</p>
+</section>
+
+</body>
+</html>
