@@ -128,6 +128,8 @@ function load(env = process.env) {
     throw new Error('Invalid configuration: CHALLENGE_TYPES is empty while CHALLENGE_ENABLED=true');
   }
   c.isProduction = c.NODE_ENV === 'production';
+  // The CRA dev server (npm start in frontend/) proxies /api from :3000.
+  if (c.NODE_ENV === 'development' && c.CORS_ORIGINS.length === 0) c.CORS_ORIGINS = ['http://localhost:3000'];
   c.cookieSecure = c.COOKIE_SECURE === 'auto' ? c.isProduction : c.COOKIE_SECURE === 'true';
   return c;
 }
