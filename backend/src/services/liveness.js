@@ -87,12 +87,20 @@ class Challenge {
     this.issuedAt = now;
     this.stage = 'waiting'; // waiting -> performed -> done | failed
     this.wrongWay = 0;
+    this.maxToward = 0; // furthest movement in the requested direction (for diagnostics)
+    this.maxAway = 0;
+    this.frames = 0;
   }
 
   get message() {
     if (this.stage === 'performed') return 'Now look back at the camera.';
     if (this.wrongWay > 0 && this.type !== 'blink') return 'Other way. ' + CHALLENGE_TEXT[this.type];
     return CHALLENGE_TEXT[this.type];
+  }
+
+  diagnostics() {
+    const r = (v) => Math.round(v * 1000) / 1000;
+    return { stage: this.stage, frames: this.frames, maxToward: r(this.maxToward), maxAway: r(this.maxAway), wrongWay: this.wrongWay, required: this.cfg.CHALLENGE_TURN_DELTA };
   }
 
   expired(now = Date.now()) {
@@ -111,13 +119,16 @@ class Challenge {
     }
     const sign = this.type === 'turn_left' ? 1 : -1;
     const moved = (pose.yaw - y0) * sign;
+    this.frames += 1;
+    this.maxToward = Math.max(this.maxToward, moved);
+    this.maxAway = Math.max(this.maxAway, -moved);
     if (this.stage === 'waiting') {
       if (moved >= delta) this.stage = 'performed';
       else if (moved <= -delta) {
         this.wrongWay += 1;
         if (this.wrongWay >= 3) this.stage = 'failed';
       }
-    } else if (this.stage === 'performed' && Math.abs(pose.yaw - y0) <= delta / 2) {
+    } else if (this.stage === 'performed' && Math.abs(pose.yaw - y0) <= Math.max(0.1, delta * 0.6)) {
       this.stage = 'done';
     }
     return this.stage;

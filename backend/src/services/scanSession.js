@@ -117,6 +117,7 @@ class ScanSession {
         claimedIdentity: this.candidate ? this.candidate.person?.rollNo : null,
         livenessScores: this.liveScores.map((s) => Math.round(s * 1000) / 1000),
         challenge: this.challenge ? this.challenge.type : null,
+        challengeDetail: this.challenge ? this.challenge.diagnostics() : null,
       });
     }
     return this.result;

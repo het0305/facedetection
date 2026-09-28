@@ -89,8 +89,9 @@ const schema = z.object({
   REGISTRATION_REQUIRE_LIVENESS: bool(true),
   CHALLENGE_ENABLED: bool(true),
   CHALLENGE_TYPES: list(['turn_left', 'turn_right']),
-  CHALLENGE_TIMEOUT_MS: num(8000, 1000, 60000),
-  CHALLENGE_TURN_DELTA: num(0.25, 0.05, 1),
+  CHALLENGE_TIMEOUT_MS: num(10000, 1000, 60000),
+  // Same size as the enrollment "slight turn" pose (yaw >= 0.15).
+  CHALLENGE_TURN_DELTA: num(0.15, 0.05, 1),
   CHALLENGE_BLINK_RATIO: num(0.65, 0.1, 0.95),
 
   // Scan state machine
