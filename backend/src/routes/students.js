@@ -109,12 +109,16 @@ router.get(
     pageSchema.extend({
       search: z.string().trim().max(100).optional(),
       status: z.enum(['active', 'inactive', 'all']).default('all'),
+      needsReenroll: z.enum(['true']).optional(),
     })
   ),
   async (req, res) => {
-    const { search, status, page, limit } = req.valid.query;
+    const { search, status, needsReenroll, page, limit } = req.valid.query;
     const filter = {};
     if (status !== 'all') filter.active = status === 'active';
+    if (needsReenroll) {
+      filter.$and = [{ $or: [{ hasLegacySample: true }, { sampleCount: { $lt: config.ENROLL_MIN_SAMPLES } }] }];
+    }
     if (search) {
       const rx = new RegExp(escapeRegex(search), 'i');
       filter.$or = [{ name: rx }, { rollNo: rx }];

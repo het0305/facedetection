@@ -17,7 +17,17 @@ function createApp() {
   app.disable('x-powered-by');
   if (config.TRUST_PROXY) app.set('trust proxy', 1);
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          // Captured face previews are shown from in-memory blob: URLs.
+          'img-src': ["'self'", 'data:', 'blob:'],
+          'media-src': ["'self'", 'blob:'],
+        },
+      },
+    })
+  );
   if (config.CORS_ORIGINS.length) {
     app.use(cors({ origin: config.CORS_ORIGINS, credentials: true }));
   }

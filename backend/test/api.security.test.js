@@ -236,7 +236,14 @@ test('responses never expose biometric data; uploads are not served', async (t) 
   for (const key of ['samples', 'enc', 'embeddings', 'descriptor']) assert.equal(text.includes(`"${key}"`), false, key);
   const one = await admin.get(`/api/students/${list.body.items[0]._id}`);
   assert.equal(JSON.stringify(one.body).includes('"samples"'), false);
-  assert.equal((await request(app).get('/uploads/anything.jpg')).status, 404);
+  // Old upload files may still exist on disk; they must never be served.
+  // (With a frontend build present, unknown paths fall back to index.html.)
+  const fs = require('fs');
+  const path = require('path');
+  const dir = path.join(__dirname, '../uploads');
+  const real = fs.existsSync(dir) ? fs.readdirSync(dir).find((f) => f.endsWith('.jpg')) : null;
+  const res = await request(app).get(`/uploads/${real || 'anything.jpg'}`);
+  assert.doesNotMatch(res.headers['content-type'] || '', /image\//);
 });
 
 test('security headers are set and internals are hidden', async (t) => {

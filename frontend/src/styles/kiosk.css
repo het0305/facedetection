@@ -1,0 +1,322 @@
+.kiosk {
+  --k-bg: #0b1220;
+  --k-surface: #111a2e;
+  --k-border: rgba(148, 163, 184, 0.16);
+  --k-text: #e2e8f0;
+  --k-text-2: #94a3b8;
+  min-height: 100%;
+  background: var(--k-bg);
+  color: var(--k-text);
+  display: flex;
+  flex-direction: column;
+}
+.kiosk-center {
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.kiosk-card {
+  width: min(440px, 100%);
+  background: var(--k-surface);
+  border: 1px solid var(--k-border);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  text-align: center;
+}
+.kiosk-card h1 {
+  font-size: 1.35rem;
+}
+.kiosk-card p {
+  color: var(--k-text-2);
+}
+.kiosk-card .field {
+  width: 100%;
+  text-align: left;
+}
+.kiosk-card .field > span {
+  color: var(--k-text-2);
+}
+
+.kiosk-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--k-border);
+}
+.kiosk-device {
+  margin-left: auto;
+  color: var(--k-text-2);
+  font-size: 0.9rem;
+}
+.kiosk-exit {
+  color: var(--k-text-2);
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+.kiosk-exit:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.kiosk-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
+  gap: 24px;
+  padding: 24px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .kiosk-main {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+.kiosk-stage {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #000;
+  border: 3px solid var(--k-border);
+  transition: border-color 0.25s;
+  min-height: 260px;
+}
+.kiosk-stage.tone-success {
+  border-color: #22c55e;
+}
+.kiosk-stage.tone-danger {
+  border-color: #ef4444;
+}
+.kiosk-stage.tone-warning {
+  border-color: #f59e0b;
+}
+.kiosk-stage.tone-challenge {
+  border-color: #8b5cf6;
+}
+.kiosk-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: scaleX(-1);
+}
+.kiosk-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(11, 18, 32, 0.9);
+}
+.kiosk-stage .spinner-wrap {
+  color: var(--k-text-2);
+}
+.challenge-cue {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: rgba(139, 92, 246, 0.9);
+  color: #fff;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    transform: translateX(-50%) scale(1.08);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .challenge-cue {
+    animation: none;
+  }
+}
+
+.kiosk-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.kiosk-clock {
+  padding: 4px 2px;
+}
+.kiosk-time {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.kiosk-date {
+  color: var(--k-text-2);
+  margin-top: 4px;
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--k-surface);
+  border: 1px solid var(--k-border);
+  transition: background 0.2s, border-color 0.2s;
+}
+.status-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--k-text-2);
+  flex-shrink: 0;
+}
+.status-text {
+  flex: 1;
+  min-width: 0;
+}
+.status-message {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.progress {
+  margin-top: 10px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.18);
+  overflow: hidden;
+}
+.progress span {
+  display: block;
+  height: 100%;
+  background: #60a5fa;
+  transition: width 0.3s;
+}
+.status-card.tone-working .status-icon {
+  background: rgba(59, 130, 246, 0.18);
+  color: #93c5fd;
+}
+.status-card.tone-warning {
+  border-color: rgba(245, 158, 11, 0.45);
+}
+.status-card.tone-warning .status-icon {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+}
+.status-card.tone-challenge {
+  border-color: rgba(139, 92, 246, 0.6);
+}
+.status-card.tone-challenge .status-icon {
+  background: rgba(139, 92, 246, 0.2);
+  color: #c4b5fd;
+}
+.status-card.tone-success {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.55);
+}
+.status-card.tone-success .status-icon {
+  background: #22c55e;
+  color: #fff;
+}
+.status-card.tone-info {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.45);
+}
+.status-card.tone-info .status-icon {
+  background: #3b82f6;
+  color: #fff;
+}
+.status-card.tone-danger {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+.status-card.tone-danger .status-icon {
+  background: #ef4444;
+  color: #fff;
+}
+
+.result-card {
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--k-surface);
+  border: 1px solid var(--k-border);
+  animation: rise 0.25s ease-out;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.result-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.result-card dl {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 12px;
+  margin: 0;
+}
+.result-card dt {
+  color: var(--k-text-2);
+  font-size: 0.8rem;
+}
+.result-card dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+.kiosk-steps {
+  margin: 0;
+  padding: 16px 16px 16px 34px;
+  border-radius: 14px;
+  border: 1px dashed var(--k-border);
+  color: var(--k-text-2);
+  font-size: 0.92rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.kiosk .notice-warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+.kiosk .notice-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+.kiosk input {
+  background: #0b1220;
+  color: var(--k-text);
+  border-color: var(--k-border);
+}
+.kiosk .btn-ghost {
+  background: transparent;
+  color: var(--k-text);
+  border-color: var(--k-border);
+}
+.kiosk .btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+}
