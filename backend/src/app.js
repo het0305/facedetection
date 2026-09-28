@@ -15,7 +15,9 @@ const { exportHandler } = require('./routes/attendance');
 function createApp() {
   const app = express();
   app.disable('x-powered-by');
-  if (config.TRUST_PROXY) app.set('trust proxy', 1);
+  // Without TRUST_PROXY, only trust X-Forwarded-For from a proxy on this machine
+  // (e.g. the CRA dev server), so rate limits still see real client IPs.
+  app.set('trust proxy', config.TRUST_PROXY ? 1 : 'loopback');
 
   app.use(
     helmet({
