@@ -11,7 +11,8 @@
     "models": "node scripts/download-models.js",
     "evaluate": "node scripts/evaluate.js",
     "evaluate-liveness": "node scripts/evaluate-liveness.js",
-    "probe": "node scripts/probe-images.js"
+    "probe": "node scripts/probe-images.js",
+    "rotate-keys": "node scripts/rotate-keys.js"
   },
   "author": "",
   "license": "ISC",
