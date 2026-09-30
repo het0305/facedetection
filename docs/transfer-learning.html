@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FaceAttend — Transfer Learning &amp; Models</title>
+<style>
+  @page { size: A4; margin: 15mm 14mm 16mm 14mm; }
+  :root { --ink:#0f172a; --ink2:#475569; --ink3:#64748b; --line:#dbe2ea; --blue:#2563eb; --blue-soft:#eff6ff; --green:#15803d; --green-soft:#ecfdf3; --amber:#b45309; --amber-soft:#fffbeb; --red:#b91c1c; --red-soft:#fef2f2; --violet:#6d28d9; --violet-soft:#f5f3ff; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Inter, Arial, sans-serif; color: var(--ink); font-size: 10pt; line-height: 1.42; margin: 0; }
+  h1 { font-size: 26pt; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h2 { font-size: 15pt; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--blue); }
+  h3 { font-size: 11pt; margin: 10px 0 5px; }
+  p { margin: 0 0 7px; }
+  code { font-family: Consolas, monospace; font-size: 8.8pt; background: #f1f5f9; padding: 1px 4px; border-radius: 3px; }
+  section { page-break-before: always; }
+  section.first { page-break-before: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 5px 0 9px; font-size: 8.8pt; }
+  tr { page-break-inside: avoid; }
+  th { background: #f1f5f9; text-align: left; font-weight: 600; padding: 4px 6px; border: 1px solid var(--line); color: var(--ink2); }
+  td { padding: 4px 6px; border: 1px solid var(--line); vertical-align: top; }
+  .muted { color: var(--ink3); }
+  .box { border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; margin: 7px 0; page-break-inside: avoid; }
+  .key { background: var(--blue-soft); border-color: #bfdbfe; }
+  .ok { background: var(--green-soft); border-color: #bbf7d0; }
+  .warn { background: var(--amber-soft); border-color: #fde68a; }
+  .vio { background: var(--violet-soft); border-color: #ddd6fe; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+  .big { font-size: 12.5pt; }
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; }
+  .tag { color: var(--blue); font-weight: 700; letter-spacing: .12em; font-size: 9pt; text-transform: uppercase; }
+  .lead { font-size: 13pt; color: var(--ink2); max-width: 150mm; margin-top: 8px; }
+  .toc { margin-top: 26px; font-size: 10.5pt; }
+  .toc div { margin-bottom: 4px; }
+  .pipe { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 6px 0 9px; }
+  .pipe span { border: 1px solid var(--line); background: #fff; border-radius: 6px; padding: 3px 7px; font-size: 8.8pt; font-weight: 600; }
+  .pipe span.m { background: var(--blue-soft); border-color: #bfdbfe; color: var(--blue); }
+  .pipe span.l { background: var(--violet-soft); border-color: #ddd6fe; color: var(--violet); }
+  .pipe i { color: var(--ink3); font-style: normal; }
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; page-break-inside: avoid; }
+  .card .num { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 700; font-size: 9pt; margin-right: 6px; }
+  .card h3 { display: flex; align-items: center; margin: 0 0 6px; }
+  .kv { display: grid; grid-template-columns: 128px 1fr; gap: 3px 10px; font-size: 9.2pt; }
+  .kv b { color: var(--ink2); font-weight: 600; }
+  .compare { display: grid; grid-template-columns: 1fr 34px 1fr; align-items: center; }
+  .compare .arrow { text-align: center; font-size: 18pt; color: var(--ink3); }
+  ul { margin: 3px 0 7px; padding-left: 18px; }
+  li { margin: 2px 0; }
+  .qa b { display: block; margin-top: 7px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="first cover">
+  <div class="tag">FaceAttend · Study notes</div>
+  <h1>Transfer Learning &amp; the AI Models</h1>
+  <div class="lead">What transfer learning is (in simple words), where it is used in this project, which 5 AI models are used, where each one works, and what each one does at that place.</div>
+  <div class="toc">
+    <div>1. Transfer learning in simple words</div>
+    <div>2. The two types — and which one we use</div>
+    <div>3. Is transfer learning used in my project? (Yes)</div>
+    <div>4. The 5 models at a glance</div>
+    <div>5. Model 1 — SSD MobileNet v1 (face detector)</div>
+    <div>6. Model 2 — Face Landmark 68 (face points)</div>
+    <div>7. Model 3 — Face Recognition ResNet (face fingerprint)</div>
+    <div>8. Models 4 &amp; 5 — MiniFASNetV2 + V1SE (anti-spoofing)</div>
+    <div>9. Where the models work: kiosk flow</div>
+    <div>10. Where the models work: registration flow</div>
+    <div>11. Registration is NOT training</div>
+    <div>12. Why transfer learning here (benefits &amp; limits)</div>
+    <div>13. Viva / exam questions &amp; answers</div>
+    <div>14. Remember it in 60 seconds</div>
+  </div>
+</section>
+
+<!-- 1 -->
+<section>
+  <h2>1. Transfer learning in simple words</h2>
+  <div class="box key big"><b>Transfer learning = reuse a model that already learned one big job, for a new related job, instead of training from zero.</b></div>
+
+  <h3>Easy example: learning to drive</h3>
+  <div class="compare">
+    <div class="box">Someone who can already <b>ride a bicycle</b> knows balance, traffic rules and steering.</div>
+    <div class="arrow">&#8594;</div>
+    <div class="box">They learn a <b>motorbike</b> much faster. They <b>transfer</b> what they already know.</div>
+  </div>
+
+  <h3>Same idea for faces</h3>
+  <div class="compare">
+    <div class="box">A model was trained on <b>millions of faces of other people</b>. It learned what makes faces different: eye shape, nose, jaw, spacing.</div>
+    <div class="arrow">&#8594;</div>
+    <div class="box">We reuse that model to recognize <b>our own users</b>, people it has <b>never seen</b>, without training it again.</div>
+  </div>
+
+  <h3>Without vs. with transfer learning</h3>
+  <table>
+    <tr><th></th><th>Train from zero</th><th>Transfer learning (our project)</th></tr>
+    <tr><td>Data needed</td><td>Millions of labelled face photos</td><td><b>5 photos per person</b></td></tr>
+    <tr><td>Time</td><td>Days or weeks on GPUs</td><td><b>Seconds</b> (just register)</td></tr>
+    <tr><td>Hardware</td><td>Powerful GPU</td><td><b>Normal laptop CPU</b></td></tr>
+    <tr><td>Add a new person</td><td>Retrain the model</td><td><b>Just save their template</b></td></tr>
+  </table>
+
+  <div class="box ok"><b>Remember:</b> "<b>Learned once, reused everywhere.</b>" The heavy learning was done by the model's authors. We only <b>use</b> the knowledge.</div>
+</section>
+
+<!-- 2 -->
+<section>
+  <h2>2. The two types — and which one we use</h2>
+  <div class="grid2">
+    <div class="box ok">
+      <b>Type 1 — Feature extraction</b> <span class="muted">(we use this)</span>
+      <ul>
+        <li>Use the pre-trained model <b>exactly as it is</b> (frozen).</li>
+        <li>Take its output (the "features") and use it for your task.</li>
+        <li><b>No training</b> at all.</li>
+      </ul>
+      <p class="muted">Our project: the ResNet gives 128 numbers per face. We compare those numbers to find who it is.</p>
+    </div>
+    <div class="box">
+      <b>Type 2 — Fine-tuning</b> <span class="muted">(NOT used)</span>
+      <ul>
+        <li>Take the pre-trained model and <b>train it a little more</b> on your own data.</li>
+        <li>Changes the model's weights.</li>
+        <li>Needs a dataset, time and usually a GPU.</li>
+      </ul>
+      <p class="muted">Our project never changes any model weights.</p>
+    </div>
+  </div>
+
+  <h3>Picture of feature extraction</h3>
+  <div class="pipe"><span>Face photo</span><i>&#8594;</i><span class="m">Pre-trained model (frozen, never changes)</span><i>&#8594;</i><span>128 numbers ("face fingerprint")</span><i>&#8594;</i><span>Compare distance</span><i>&#8594;</i><span>Who is it?</span></div>
+
+  <div class="box key"><b>Memory trick: "Freeze &amp; Use".</b> We <b>freeze</b> the model (no training) and <b>use</b> its output. That is feature extraction.</div>
+
+  <h3>Related words you may hear</h3>
+  <table>
+    <tr><th>Word</th><th>Meaning in simple words</th><th>In our project</th></tr>
+    <tr><td>Pre-trained model</td><td>A model someone already trained and shared</td><td>All 5 models</td></tr>
+    <tr><td>Embedding / descriptor</td><td>A list of numbers that describes something</td><td>128 numbers per face</td></tr>
+    <tr><td>Metric learning</td><td>Training so that "same = close, different = far" in numbers</td><td>How the ResNet was trained by its authors</td></tr>
+    <tr><td>Few-shot recognition</td><td>Recognizing someone from only a few examples</td><td>5 photos per person are enough</td></tr>
+    <tr><td>Inference</td><td>Using a model to get an answer (no learning)</td><td>Everything the backend does</td></tr>
+  </table>
+</section>
+
+<!-- 3 -->
+<section>
+  <h2>3. Is transfer learning used in my project?</h2>
+  <div class="box ok big"><b>Yes.</b> The project uses <b>transfer learning by feature extraction</b>. It uses <b>5 pre-trained models</b> without any fine-tuning. <b>No model is trained</b> anywhere in the project.</div>
+
+  <table>
+    <tr><th>Question</th><th>Answer</th></tr>
+    <tr><td>Is any model trained in the project?</td><td><b>No.</b> All models come pre-trained.</td></tr>
+    <tr><td>Is fine-tuning done?</td><td><b>No.</b> Model weights never change.</td></tr>
+    <tr><td>Where is the "transfer"?</td><td>Knowledge learned from other people's faces is reused to recognize <b>our</b> users, and to detect faces, face points and fake faces.</td></tr>
+    <tr><td>Where are the models?</td><td>Face models: inside the npm package <code>@vladmandic/face-api</code> (folder <code>node_modules/@vladmandic/face-api/model</code>). Anti-spoof models: <code>backend/models/antispoof/</code>.</td></tr>
+    <tr><td>Which code loads them?</td><td><code>backend/src/services/faceEngine.js</code> (face models) and <code>backend/src/services/liveness.js</code> (anti-spoof models). Both load once when the server starts.</td></tr>
+    <tr><td>What runs them?</td><td>TensorFlow.js (WASM backend) for face models; onnxruntime-node for anti-spoof models.</td></tr>
+  </table>
+
+  <h3>What our project adds on top (our own logic, not learned)</h3>
+  <ul>
+    <li><b>Quality rules</b>: face size, blur, lighting, pose (<code>quality.js</code>)</li>
+    <li><b>Matching rule</b>: distance &#8804; 0.5 and 0.06 better than the 2nd-best person (<code>matcher.js</code>)</li>
+    <li><b>Decision steps</b>: 3 stable frames, head-turn challenge, confirm (<code>scanSession.js</code>)</li>
+    <li><b>Attendance rules</b>: one record per person per day (<code>attendanceService.js</code>)</li>
+  </ul>
+  <div class="box warn"><b>Easy line:</b> "The models give the <b>knowledge</b>; our code gives the <b>rules</b>."</div>
+</section>
+
+<!-- 4 -->
+<section>
+  <h2>4. The 5 models at a glance</h2>
+  <table>
+    <tr><th>#</th><th>Model</th><th>Nickname</th><th>Job</th><th>Input &#8594; Output</th><th>Size</th><th>Runs with</th></tr>
+    <tr><td>1</td><td>SSD MobileNet v1</td><td><b>The Finder</b></td><td>Find faces</td><td>Camera frame &#8594; face boxes + score</td><td>5.6 MB</td><td>TensorFlow.js</td></tr>
+    <tr><td>2</td><td>Face Landmark 68</td><td><b>The Pointer</b></td><td>Mark 68 face points</td><td>Face crop &#8594; 68 (x, y) points</td><td>0.36 MB</td><td>TensorFlow.js</td></tr>
+    <tr><td>3</td><td>Face Recognition (ResNet)</td><td><b>The Fingerprinter</b></td><td>Describe the face</td><td>Aligned face &#8594; 128 numbers</td><td>6.4 MB</td><td>TensorFlow.js</td></tr>
+    <tr><td>4</td><td>MiniFASNetV2</td><td><b>Guard 1</b></td><td>Real or fake? (close crop)</td><td>80&#215;80 crop (2.7&#215; face) &#8594; real/fake score</td><td>1.7 MB</td><td>onnxruntime</td></tr>
+    <tr><td>5</td><td>MiniFASNetV1SE</td><td><b>Guard 2</b></td><td>Real or fake? (wide crop)</td><td>80&#215;80 crop (4.0&#215; face) &#8594; real/fake score</td><td>1.7 MB</td><td>onnxruntime</td></tr>
+  </table>
+
+  <div class="box key big"><b>Memory trick: "Find &#8594; Point &#8594; Fingerprint &#8594; Guard".</b><br>
+  <span class="muted">Finder finds the face · Pointer marks the eyes/nose · Fingerprinter makes 128 numbers · Guards check it's a real person.</span></div>
+
+  <h3>Order they run on one camera frame</h3>
+  <div class="pipe"><span>Camera frame</span><i>&#8594;</i><span class="m">1 Finder</span><i>&#8594;</i><span class="m">2 Pointer</span><i>&#8594;</i><span>quality check (our rules)</span><i>&#8594;</i><span class="l">4 + 5 Guards</span><i>&#8594;</i><span class="m">3 Fingerprinter</span><i>&#8594;</i><span>match (our rule)</span></div>
+  <p class="muted">Expensive models (Guards, Fingerprinter) only run if the frame passes the quality check, so bad frames are rejected quickly.</p>
+
+  <h3>Who made them (the "learned once" part)</h3>
+  <table>
+    <tr><th>Model</th><th>Trained by</th><th>Learned from</th></tr>
+    <tr><td>1, 2, 3</td><td>face-api.js authors (maintained today in @vladmandic/face-api)</td><td>Large public face datasets (face boxes, face points, many thousands of different people)</td></tr>
+    <tr><td>4, 5</td><td>Minivision (Silent-Face-Anti-Spoofing project, Apache-2.0 licence)</td><td>Photos of real faces and of attacks (printed photos, screens)</td></tr>
+  </table>
+</section>
+
+<!-- 5 -->
+<section>
+  <h2>5. Model 1 — SSD MobileNet v1 ("The Finder")</h2>
+  <div class="card">
+    <h3><span class="num">1</span>Face detector</h3>
+    <div class="kv">
+      <b>Job</b><span>Find every face in the camera frame and draw a box around it.</span>
+      <b>Input</b><span>The whole camera frame (e.g. 640&#215;480 pixels).</span>
+      <b>Output</b><span>List of face boxes (x, y, width, height) + confidence score (0–1).</span>
+      <b>Type</b><span>SSD = "Single Shot Detector" (finds all faces in one pass). MobileNet = light, fast network made for phones/CPUs.</span>
+      <b>File</b><span><code>ssd_mobilenetv1_model.bin</code> (5.6 MB) in @vladmandic/face-api</span>
+      <b>Loaded in</b><span><code>faceEngine.js &#8594; init()</code> at server start</span>
+      <b>Called in</b><span><code>faceEngine.js &#8594; FrameImage.detect()</code>, used by <code>faceAnalysis.js</code></span>
+      <b>Setting</b><span><code>DETECTOR_MIN_CONFIDENCE = 0.5</code> (ignore weak detections)</span>
+    </div>
+  </div>
+  <h3>What it does at that place</h3>
+  <table>
+    <tr><th>Place</th><th>Work done</th></tr>
+    <tr><td>Kiosk scan (every frame)</td><td>Finds faces. 0 faces &#8594; "Looking for face...". 2+ faces &#8594; "Please ensure only one person is visible." The box is also drawn on the kiosk screen.</td></tr>
+    <tr><td>Registration (every frame)</td><td>Same, but <b>any</b> second face blocks registration ("Only one person should be visible during registration").</td></tr>
+    <tr><td>Quality gate</td><td>Box size &#8594; "Move closer" / "Move back". Box at edge &#8594; "Please center your face". Low score &#8594; "Make sure your whole face is clearly visible".</td></tr>
+    <tr><td>Tracking</td><td>Box position is compared frame to frame. If the face jumps, progress resets (so two people can't be mixed).</td></tr>
+  </table>
+  <div class="box ok"><b>Transfer here:</b> it learned "what a face looks like" from thousands of labelled photos. We reuse that to find faces in our camera. No training by us.</div>
+</section>
+
+<!-- 6 -->
+<section>
+  <h2>6. Model 2 — Face Landmark 68 ("The Pointer")</h2>
+  <div class="card">
+    <h3><span class="num">2</span>68-point face landmarks</h3>
+    <div class="kv">
+      <b>Job</b><span>Put 68 points on the face: jaw (0–16), eyebrows (17–26), nose (27–35), eyes (36–47), mouth (48–67).</span>
+      <b>Input</b><span>The face area found by Model 1.</span>
+      <b>Output</b><span>68 (x, y) coordinates.</span>
+      <b>File</b><span><code>face_landmark_68_model.bin</code> (0.36 MB)</span>
+      <b>Loaded in</b><span><code>faceEngine.js &#8594; init()</code></span>
+      <b>Called in</b><span><code>faceEngine.js &#8594; detect()</code> (runs right after Model 1)</span>
+      <b>Maths on the points</b><span><code>faceGeometry.js &#8594; headPose()</code></span>
+    </div>
+  </div>
+  <h3>What it does at that place</h3>
+  <table>
+    <tr><th>Place</th><th>Work done with the 68 points</th></tr>
+    <tr><td><b>Alignment</b> (before Model 3)</td><td>Finds the exact face area, so the Fingerprinter always sees the face in the same position. Better alignment = better recognition.</td></tr>
+    <tr><td><b>Head turn (yaw)</b></td><td>Nose tip vs. jaw edges. Too turned &#8594; "Please look directly at the camera".</td></tr>
+    <tr><td><b>Head tilt (roll)</b></td><td>Angle of the line between the eyes. &gt; 20&#176; &#8594; "Please keep your head straight".</td></tr>
+    <tr><td><b>Up/down (pitch)</b></td><td>Nose height between eyes and chin &#8594; "Please look straight at the camera, not up or down".</td></tr>
+    <tr><td><b>Liveness challenge</b></td><td>Checks you <b>really turned</b> left/right when asked, then looked back. A photo cannot do this.</td></tr>
+    <tr><td><b>Registration poses</b></td><td>Checks "turn slightly left" / "right" photos are really turned (0.15–0.65).</td></tr>
+    <tr><td><b>Eye openness (EAR)</b></td><td>Used for the optional "blink" challenge.</td></tr>
+  </table>
+  <div class="box ok"><b>Transfer here:</b> it learned where eyes/nose/jaw are from labelled face images. Our code turns those points into pose checks and the liveness challenge.</div>
+</section>
+
+<!-- 7 -->
+<section>
+  <h2>7. Model 3 — Face Recognition ResNet ("The Fingerprinter")</h2>
+  <div class="card">
+    <h3><span class="num">3</span>128-D face descriptor (the main transfer-learning model)</h3>
+    <div class="kv">
+      <b>Job</b><span>Turn a face into <b>128 numbers</b> (a "face fingerprint" / embedding).</span>
+      <b>Input</b><span>The aligned face (using Model 2's points), resized to 150&#215;150.</span>
+      <b>Output</b><span>128 decimal numbers.</span>
+      <b>Type</b><span>ResNet (deep network with "shortcut" connections), trained with <b>metric learning</b>: the same person's faces &#8594; close numbers, different people &#8594; far apart.</span>
+      <b>File</b><span><code>face_recognition_model.bin</code> (6.4 MB)</span>
+      <b>Loaded in</b><span><code>faceEngine.js &#8594; init()</code></span>
+      <b>Called in</b><span><code>faceEngine.js &#8594; FrameImage.descriptor()</code></span>
+      <b>Numbers used by</b><span><code>matcher.js</code> (compare), <code>gallery.js</code> (all users in memory), <code>biometricCrypto.js</code> (encrypt before saving)</span>
+    </div>
+  </div>
+  <h3>How recognition works with it</h3>
+  <div class="pipe"><span>New face</span><i>&#8594;</i><span class="m">ResNet &#8594; 128 numbers</span><i>&#8594;</i><span>distance to each registered person</span><i>&#8594;</i><span>smallest &#8804; 0.5?</span><i>&#8594;</i><span>0.06 better than 2nd?</span><i>&#8594;</i><span>Same on 3 frames?</span><i>&#8594;</i><span>Identified</span></div>
+  <table>
+    <tr><th>Place</th><th>Work done</th></tr>
+    <tr><td>Registration</td><td>Makes 128 numbers for each of the 5 photos &#8594; checks they are the same person &#8594; checks no one else already has this face (duplicate check) &#8594; encrypted and saved.</td></tr>
+    <tr><td>Kiosk</td><td>Makes 128 numbers for each good frame &#8594; compared with all saved templates &#8594; name or "Face not recognized".</td></tr>
+    <tr><td>Tracking</td><td>Numbers must stay similar inside one session, so a different person stepping in resets progress.</td></tr>
+    <tr><td>Duplicates tab</td><td>Compares everyone with everyone to find the same person registered twice.</td></tr>
+  </table>
+  <div class="box key"><b>Why this is the heart of transfer learning:</b> it was trained on thousands of <b>other</b> people, yet it works for <b>your</b> users, because it learned <b>how to describe any face</b>, not just the people in its training set.</div>
+</section>
+
+<!-- 8 -->
+<section>
+  <h2>8. Models 4 &amp; 5 — MiniFASNetV2 + MiniFASNetV1SE ("The Guards")</h2>
+  <div class="card">
+    <h3><span class="num">4</span>+&nbsp;<span class="num">5</span>Passive anti-spoofing (liveness)</h3>
+    <div class="kv">
+      <b>Job</b><span>Decide if the face is a <b>real live person</b> or a <b>fake</b> (printed photo, phone or monitor screen).</span>
+      <b>Input</b><span>80&#215;80 crop around the face. Guard 1 (V2) uses a crop 2.7&#215; the face; Guard 2 (V1SE) uses a wider 4.0&#215; crop, so it also sees the edges of a phone or paper.</span>
+      <b>Output</b><span>3 scores &#8594; softmax &#8594; "real" probability (0–1). We average both guards.</span>
+      <b>Type</b><span>MiniFAS = "Mini Face Anti-Spoofing" network, very small and fast (~5 ms). SE = "Squeeze-and-Excitation" attention blocks.</span>
+      <b>Files</b><span><code>backend/models/antispoof/MiniFASNetV2.onnx</code>, <code>MiniFASNetV1SE.onnx</code> (1.7 MB each)</span>
+      <b>Loaded in</b><span><code>liveness.js &#8594; init()</code> using onnxruntime-node</span>
+      <b>Called in</b><span><code>liveness.js &#8594; passiveScore()</code>; crop made by <code>faceEngine.js &#8594; antispoofInput()</code></span>
+      <b>Settings</b><span><code>LIVENESS_THRESHOLD = 0.6</code> (average needed), <code>LIVENESS_HARD_FAIL = 0.2</code></span>
+    </div>
+  </div>
+  <h3>What they do at that place</h3>
+  <table>
+    <tr><th>Place</th><th>Work done</th></tr>
+    <tr><td>Kiosk</td><td>Score every good frame. Average of 3+ frames must be &#8805; 0.6. Two frames below 0.2 &#8594; "Unable to confirm a live person." and a security event in the audit log.</td></tr>
+    <tr><td>Registration</td><td>Each photo must be live, so nobody can register someone using their photo.</td></tr>
+  </table>
+  <h3>Two layers of liveness</h3>
+  <div class="grid2">
+    <div class="box vio"><b>Passive (the models)</b><br>Looks at texture, glare, edges and moiré patterns of screens/paper. No action needed from the user.</div>
+    <div class="box vio"><b>Active (our code + Model 2)</b><br>"Turn your head slightly left/right". The landmark points prove the head really moved.</div>
+  </div>
+  <div class="box ok"><b>Transfer here:</b> the Guards learned "real vs. fake" from Minivision's dataset of real and attack photos. We reuse them unchanged.</div>
+  <p class="muted">Measured on your own webcam: real faces scored 0.89–0.998. Attack scores must still be measured with <code>npm run evaluate-liveness</code>.</p>
+</section>
+
+<!-- 9 -->
+<section>
+  <h2>9. Where the models work: kiosk flow</h2>
+  <p>Page <code>/kiosk</code> sends a frame every ~0.3 s to <code>POST /api/kiosk/scan</code> &#8594; <code>routes/kiosk.js</code> &#8594; <code>faceAnalysis.js</code> &#8594; <code>scanSession.js</code>.</p>
+  <table>
+    <tr><th>Step</th><th>Screen shows</th><th>Model used</th><th>Code file</th></tr>
+    <tr><td>1. Find face</td><td>Looking for face...</td><td><b>1 Finder</b></td><td>faceEngine.detect</td></tr>
+    <tr><td>2. Face points</td><td>(face box appears)</td><td><b>2 Pointer</b></td><td>faceEngine.detect, faceGeometry</td></tr>
+    <tr><td>3. Quality</td><td>Move closer / Improve lighting ...</td><td>1 + 2 outputs + our rules</td><td>quality.js</td></tr>
+    <tr><td>4. Real or fake</td><td>Checking liveness...</td><td><b>4 + 5 Guards</b></td><td>liveness.passiveScore</td></tr>
+    <tr><td>5. Who is it</td><td>Verifying identity...</td><td><b>3 Fingerprinter</b></td><td>faceEngine.descriptor &#8594; matcher</td></tr>
+    <tr><td>6. Challenge</td><td>Please turn your head slightly to your left</td><td><b>2 Pointer</b></td><td>liveness.Challenge</td></tr>
+    <tr><td>7. Confirm</td><td>Verifying identity...</td><td><b>3 Fingerprinter</b></td><td>scanSession (CONFIRM)</td></tr>
+    <tr><td>8. Save</td><td>Attendance marked successfully.</td><td>no model</td><td>attendanceService</td></tr>
+  </table>
+  <div class="box key"><b>Memory trick for the kiosk: "F-P-Q-G-F-C"</b>: <b>F</b>inder &#8594; <b>P</b>ointer &#8594; <b>Q</b>uality &#8594; <b>G</b>uards &#8594; <b>F</b>ingerprinter &#8594; <b>C</b>hallenge.</div>
+</section>
+
+<!-- 10 -->
+<section>
+  <h2>10. Where the models work: registration flow</h2>
+  <p>Page <code>/admin/students/new</code> &#8594; <code>FaceCapture.js</code> &#8594; <code>POST /api/students/check-sample</code> (live guide) and <code>POST /api/students</code> (save) &#8594; <code>enrollmentService.js</code>.</p>
+  <table>
+    <tr><th>Step</th><th>Model used</th><th>What happens</th></tr>
+    <tr><td>Live guide (every frame)</td><td>1 Finder, 2 Pointer, 4 + 5 Guards</td><td>Exactly one face? Good quality? Correct pose (straight/left/right)? Live? Auto-capture after 2 good frames.</td></tr>
+    <tr><td>Save: re-check each photo</td><td>1, 2, 4, 5</td><td>Server checks all 5 photos again (never trusts the browser).</td></tr>
+    <tr><td>Save: make templates</td><td><b>3 Fingerprinter</b></td><td>128 numbers for each photo.</td></tr>
+    <tr><td>Same-person check</td><td>3 (numbers)</td><td>All 5 photos must be close to each other (&#8804; 0.55).</td></tr>
+    <tr><td>Duplicate check</td><td>3 (numbers)</td><td>Closer than 0.42 to someone already registered &#8594; warning.</td></tr>
+    <tr><td>Store</td><td>no model</td><td>Numbers encrypted (AES-256) and saved. Photos deleted from memory.</td></tr>
+  </table>
+  <h3>Which model is used where (summary)</h3>
+  <table>
+    <tr><th>Model</th><th>Kiosk</th><th>Registration</th><th>Duplicates tab</th><th>Evaluation scripts</th></tr>
+    <tr><td>1 Finder</td><td>&#10003;</td><td>&#10003;</td><td>—</td><td>&#10003;</td></tr>
+    <tr><td>2 Pointer</td><td>&#10003; (quality + challenge)</td><td>&#10003; (quality + pose)</td><td>—</td><td>&#10003;</td></tr>
+    <tr><td>3 Fingerprinter</td><td>&#10003; (identify)</td><td>&#10003; (templates)</td><td>&#10003; (uses saved numbers)</td><td>&#10003; (FAR/FRR)</td></tr>
+    <tr><td>4 + 5 Guards</td><td>&#10003;</td><td>&#10003;</td><td>—</td><td>&#10003; (APCER/BPCER)</td></tr>
+  </table>
+</section>
+
+<!-- 11 -->
+<section>
+  <h2>11. Registration is NOT training</h2>
+  <div class="box warn big"><b>Common mistake:</b> "When I register a person, the model learns their face." <b>Wrong.</b> The model does not change at all.</div>
+  <div class="grid2">
+    <div class="box"><b>What really happens at registration</b>
+      <ol>
+        <li>The frozen Fingerprinter reads the 5 photos.</li>
+        <li>It outputs 5 &#215; 128 numbers.</li>
+        <li>The numbers are encrypted and saved in MongoDB (<code>students.samples</code>).</li>
+        <li>They are loaded into memory (<code>gallery.js</code>) for fast matching.</li>
+      </ol>
+    </div>
+    <div class="box"><b>What really happens at the kiosk</b>
+      <ol>
+        <li>The same frozen model makes 128 numbers for the new face.</li>
+        <li><code>matcher.js</code> measures the distance to every saved person.</li>
+        <li>Small enough and clearly the best &#8594; that person.</li>
+      </ol>
+    </div>
+  </div>
+  <table>
+    <tr><th></th><th>Training (not in our project)</th><th>Registration (our project)</th></tr>
+    <tr><td>Model weights</td><td>Change</td><td><b>Never change</b></td></tr>
+    <tr><td>Time</td><td>Hours/days</td><td><b>~2 seconds</b></td></tr>
+    <tr><td>Stored result</td><td>A new model file</td><td><b>128 numbers per photo</b></td></tr>
+    <tr><td>Delete a person</td><td>Retrain</td><td><b>Delete their numbers</b></td></tr>
+  </table>
+  <div class="box key"><b>Easy line:</b> "Registration <b>stores</b> a face fingerprint; it does not <b>teach</b> the model."</div>
+</section>
+
+<!-- 12 -->
+<section>
+  <h2>12. Why transfer learning here (benefits &amp; limits)</h2>
+  <div class="grid2">
+    <div class="box ok"><b>Benefits</b>
+      <ul>
+        <li><b>No big dataset</b> needed: 5 photos per person.</li>
+        <li><b>No GPU</b>: runs on a normal laptop CPU (~0.3–0.4 s per frame).</li>
+        <li><b>Instant new users</b>: no retraining.</li>
+        <li><b>Proven accuracy</b>: the models were trained and tested by their authors on large datasets.</li>
+        <li><b>Privacy</b>: we store only 128 numbers, not photos.</li>
+        <li><b>Small</b>: all 5 models together &#8776; 16 MB.</li>
+      </ul>
+    </div>
+    <div class="box warn"><b>Limits (be honest)</b>
+      <ul>
+        <li>The models were trained on other data; accuracy on <b>your camera/lighting</b> must be measured (<code>npm run evaluate</code>).</li>
+        <li>Very similar faces (twins) can look alike &#8594; our margin rule answers "Unable to verify identity" instead of guessing.</li>
+        <li>One normal webcam can't stop every attack (e.g. 3D masks).</li>
+        <li>Fine-tuning could improve accuracy, but needs a labelled dataset and a GPU.</li>
+      </ul>
+    </div>
+  </div>
+  <h3>Numbers to remember</h3>
+  <div class="grid4">
+    <div class="box key"><b>5</b><br><span class="muted">pre-trained models</span></div>
+    <div class="box key"><b>128</b><br><span class="muted">numbers per face</span></div>
+    <div class="box key"><b>0.5</b><br><span class="muted">max match distance</span></div>
+    <div class="box key"><b>0.6</b><br><span class="muted">min liveness score</span></div>
+    <div class="box key"><b>68</b><br><span class="muted">face points</span></div>
+    <div class="box key"><b>80&#215;80</b><br><span class="muted">anti-spoof input</span></div>
+    <div class="box key"><b>0.06</b><br><span class="muted">margin over 2nd best</span></div>
+    <div class="box key"><b>0</b><br><span class="muted">models trained by us</span></div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section>
+  <h2>13. Viva / exam questions &amp; answers</h2>
+  <div class="qa">
+    <b>Q1. What is transfer learning?</b>
+    Reusing a model trained on one large task for a new related task, instead of training from scratch.
+    <b>Q2. Is transfer learning used in your project?</b>
+    Yes, as feature extraction. Five pre-trained models are used without fine-tuning.
+    <b>Q3. Which type of transfer learning?</b>
+    Feature extraction (frozen models). No fine-tuning.
+    <b>Q4. Name the models.</b>
+    SSD MobileNet v1 (detection), Face Landmark 68 (landmarks), ResNet face recognition (128-D embedding), MiniFASNetV2 and MiniFASNetV1SE (anti-spoofing).
+    <b>Q5. Which model does the actual recognition?</b>
+    The ResNet face recognition model. It outputs a 128-number embedding, compared with Euclidean distance.
+    <b>Q6. Do you train the model when a user registers?</b>
+    No. Registration only stores the user's embeddings (encrypted). The model never changes.
+    <b>Q7. How do you decide who the person is?</b>
+    Smallest distance must be &#8804; 0.5, at least 0.06 better than the second-best person, and the same on 3 consecutive frames.
+    <b>Q8. How do you stop photo attacks?</b>
+    Two MiniFASNet models (passive liveness) plus a head-turn challenge verified with the 68 landmarks.
+    <b>Q9. Why not train your own model?</b>
+    That needs millions of labelled faces, GPUs and weeks. Transfer learning gives proven accuracy with 5 photos per user on a normal CPU.
+    <b>Q10. What libraries run the models?</b>
+    TensorFlow.js (WASM backend) through @vladmandic/face-api for models 1–3; onnxruntime-node for the MiniFASNet models.
+    <b>Q11. What is an embedding?</b>
+    A list of numbers that describes a face so that the same person gives close numbers and different people give far numbers.
+    <b>Q12. What is metric learning?</b>
+    The training method the ResNet authors used: pull the same person's embeddings together, push different people apart.
+  </div>
+</section>
+
+<!-- 14 -->
+<section>
+  <h2>14. Remember it in 60 seconds</h2>
+  <div class="box key big"><b>1 line:</b> My project uses <b>transfer learning (feature extraction)</b>: <b>5 pre-trained, frozen models</b> find the face, mark 68 points, check it's real, and turn it into <b>128 numbers</b>, which are <b>compared</b> with registered users. <b>Nothing is trained.</b></div>
+  <table>
+    <tr><th>Nickname</th><th>Real name</th><th>One job</th><th>File that uses it</th></tr>
+    <tr><td><b>Finder</b></td><td>SSD MobileNet v1</td><td>Where is the face?</td><td>faceEngine.js</td></tr>
+    <tr><td><b>Pointer</b></td><td>Face Landmark 68</td><td>Where are eyes, nose, jaw? (pose + challenge)</td><td>faceEngine.js, faceGeometry.js</td></tr>
+    <tr><td><b>Fingerprinter</b></td><td>Face Recognition ResNet</td><td>Who is it? (128 numbers)</td><td>faceEngine.js &#8594; matcher.js</td></tr>
+    <tr><td><b>Guards</b></td><td>MiniFASNetV2 + V1SE</td><td>Real person or fake?</td><td>liveness.js</td></tr>
+  </table>
+  <div class="grid2">
+    <div class="box ok"><b>3 words:</b> <b>Freeze &#8594; Extract &#8594; Compare</b></div>
+    <div class="box ok"><b>4 models order:</b> <b>Find &#8594; Point &#8594; Guard &#8594; Fingerprint</b></div>
+  </div>
+  <div class="box warn"><b>Don't forget:</b> Registration <b>stores</b> numbers; it does <b>not train</b>. The models give the <b>knowledge</b>; our code gives the <b>rules</b>.</div>
+</section>
+
+</body>
+</html>
