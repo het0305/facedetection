@@ -32,8 +32,8 @@ function buildUrl(path, query) {
   return BASE ? url.toString() : url.pathname + url.search;
 }
 
-async function request(method, path, { body, form, query, signal } = {}) {
-  const headers = { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' };
+async function request(method, path, { body, form, query, signal, file } = {}) {
+  const headers = { 'X-Requested-With': 'XMLHttpRequest', Accept: file ? '*/*' : 'application/json' };
   let payload;
   if (form) payload = form;
   else if (body !== undefined) {
@@ -61,7 +61,25 @@ async function request(method, path, { body, form, query, signal } = {}) {
     const status = res.status >= 500 ? 500 : res.status;
     throw new ApiError(res.status, e?.code || 'HTTP_' + res.status, e?.message || FALLBACK[status] || FALLBACK[500], e?.details);
   }
+  if (file) {
+    const match = /filename="?([^";]+)"?/i.exec(res.headers.get('content-disposition') || '');
+    return { blob: await res.blob(), filename: match ? match[1] : 'download' };
+  }
   return data;
+}
+
+// Downloads go through fetch (not a plain link) so they carry the API headers,
+// reach the backend through the dev proxy, and surface errors to the page.
+async function download(path, query) {
+  const { blob, filename } = await request('GET', path, { query, file: true });
+  const href = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(href), 1000);
 }
 
 export const api = {
@@ -72,5 +90,6 @@ export const api = {
   del: (path) => request('DELETE', path),
   upload: (path, form, opts) => request('POST', path, { ...opts, form }),
   uploadPut: (path, form, opts) => request('PUT', path, { ...opts, form }),
+  download,
   url: buildUrl,
 };

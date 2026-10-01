@@ -71,7 +71,18 @@ export default function Attendance() {
     }
   };
 
-  const exportHref = api.url('/attendance/export', { from, to, search: q, status, studentId });
+  const [exporting, setExporting] = useState(false);
+  const exportExcel = async () => {
+    setExporting(true);
+    setError(null);
+    try {
+      await api.download('/attendance/export', { from, to, search: q, status, studentId });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setExporting(false);
+    }
+  };
 
   return (
     <div className="page">
@@ -80,9 +91,9 @@ export default function Attendance() {
           <h1>Attendance</h1>
           <p className="muted">Times shown in {timezone || 'server time'}.</p>
         </div>
-        <a className="btn btn-primary" href={exportHref} download>
-          <Icon name="download" size={16} /> Export Excel
-        </a>
+        <button className="btn btn-primary" onClick={exportExcel} disabled={exporting}>
+          <Icon name="download" size={16} /> {exporting ? 'Exporting…' : 'Export Excel'}
+        </button>
       </div>
 
       {notice && (
