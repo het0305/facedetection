@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FaceAttend — Viva Questions &amp; Answers</title>
+<style>
+  @page { size: A4; margin: 14mm 14mm 15mm 14mm; }
+  :root { --ink:#0f172a; --ink2:#475569; --ink3:#64748b; --line:#dbe2ea; --blue:#2563eb; --blue-soft:#eff6ff; --green-soft:#ecfdf3; --amber-soft:#fffbeb; --violet:#6d28d9; --violet-soft:#f5f3ff; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Inter, Arial, sans-serif; color: var(--ink); font-size: 10pt; line-height: 1.42; margin: 0; }
+  h1 { font-size: 26pt; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h2 { font-size: 14pt; margin: 14px 0 8px; padding-bottom: 5px; border-bottom: 2px solid var(--blue); page-break-after: avoid; }
+  h2 .n { color: var(--blue); margin-right: 6px; }
+  p { margin: 0 0 6px; }
+  code { font-family: Consolas, monospace; font-size: 8.8pt; background: #f1f5f9; padding: 1px 4px; border-radius: 3px; }
+  .cover { height: 255mm; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }
+  .tag { color: var(--blue); font-weight: 700; letter-spacing: .12em; font-size: 9pt; text-transform: uppercase; }
+  .lead { font-size: 13pt; color: var(--ink2); max-width: 150mm; margin-top: 8px; }
+  .toc { margin-top: 24px; font-size: 10.5pt; columns: 2; }
+  .toc div { margin-bottom: 4px; }
+  .box { border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; margin: 8px 0; page-break-inside: avoid; }
+  .key { background: var(--blue-soft); border-color: #bfdbfe; }
+  .ok { background: var(--green-soft); border-color: #bbf7d0; }
+  .warn { background: var(--amber-soft); border-color: #fde68a; }
+  .q { border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 6px; padding: 7px 11px; margin: 0 0 7px; page-break-inside: avoid; }
+  .q .qt { font-weight: 700; margin-bottom: 3px; }
+  .q .qt .num { color: var(--blue); margin-right: 5px; }
+  .q .a { color: #1e293b; }
+  .q ul { margin: 3px 0 0; padding-left: 18px; }
+  .q li { margin: 1px 0; }
+  .tip { font-size: 8.8pt; color: var(--violet); margin-top: 3px; }
+  table { width: 100%; border-collapse: collapse; margin: 5px 0 9px; font-size: 9pt; }
+  tr { page-break-inside: avoid; }
+  th { background: #f1f5f9; text-align: left; font-weight: 600; padding: 4px 6px; border: 1px solid var(--line); color: var(--ink2); }
+  td { padding: 4px 6px; border: 1px solid var(--line); vertical-align: top; }
+  .brk { page-break-before: always; }
+  .tricks { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .tricks div { border: 1px solid #ddd6fe; background: var(--violet-soft); border-radius: 8px; padding: 9px 10px; page-break-inside: avoid; }
+  .tricks b { display: block; color: var(--violet); font-size: 11pt; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="tag">FaceAttend · Viva preparation</div>
+  <h1>Viva Questions &amp; Answers</h1>
+  <p class="lead">50 project questions your examiner is likely to ask, with short answers you can speak in the viva. They cover the project, workflow, AI models, anti-spoofing, security, database, testing and tricky questions.</p>
+  <div class="toc">
+    <div>1. Project basics</div>
+    <div>2. Workflow</div>
+    <div>3. AI models &amp; transfer learning</div>
+    <div>4. Face matching</div>
+    <div>5. Anti-spoofing (liveness)</div>
+    <div>6. Security</div>
+    <div>7. Database</div>
+    <div>8. Features</div>
+    <div>9. Testing &amp; limitations</div>
+    <div>10. Tricky questions</div>
+    <div>11. Numbers to remember</div>
+    <div>12. Memory tricks</div>
+  </div>
+  <div class="box key" style="margin-top:22px">
+    <b>How to answer:</b> start with the one-line answer, then add one detail from your project (a model name, a number or a file). Short and confident beats long and unsure.
+  </div>
+</div>
+
+<h2><span class="n">1</span>Project basics</h2>
+<div class="q"><div class="qt"><span class="num">Q1.</span>What is your project?</div><div class="a">A face recognition attendance system. A person stands in front of the camera and attendance is marked automatically, with checks against fake faces such as photos or screens.</div></div>
+<div class="q"><div class="qt"><span class="num">Q2.</span>Why did you choose this project?</div><div class="a">Manual attendance is slow and allows proxy attendance. Face recognition is fast, contactless and hard to fake.</div></div>
+<div class="q"><div class="qt"><span class="num">Q3.</span>What technologies did you use?</div><div class="a">
+  <ul>
+    <li><b>Frontend:</b> React</li>
+    <li><b>Backend:</b> Node.js + Express</li>
+    <li><b>Database:</b> MongoDB (Mongoose)</li>
+    <li><b>Face AI:</b> @vladmandic/face-api on TensorFlow.js (WASM backend)</li>
+    <li><b>Anti-spoofing:</b> MiniFASNet models run with onnxruntime-node</li>
+    <li><b>Excel export:</b> ExcelJS</li>
+  </ul></div></div>
+<div class="q"><div class="qt"><span class="num">Q4.</span>What are the main modules?</div><div class="a">Admin console, kiosk (scanning), registration, recognition, liveness (anti-spoof), attendance, and audit log.</div></div>
+<div class="q"><div class="qt"><span class="num">Q5.</span>Who are the users of the system?</div><div class="a"><b>Admin:</b> registers people, views and exports attendance, manages devices. <b>Students/staff:</b> scan their face at the kiosk.</div></div>
+<div class="q"><div class="qt"><span class="num">Q6.</span>What is a kiosk?</div><div class="a">The attendance scanning screen with a camera, kept at the entrance, where people mark attendance by showing their face. It is the <code>/kiosk</code> page.</div></div>
+
+<h2><span class="n">2</span>Workflow</h2>
+<div class="q"><div class="qt"><span class="num">Q7.</span>Explain the full flow of your project.</div><div class="a">
+  <b>Registration:</b> admin captures 5 photos → each face becomes 128 numbers → the numbers are encrypted and saved.<br>
+  <b>Attendance:</b> the kiosk camera sends frames → the system finds the face → checks quality → checks the person is real → asks for a head turn → matches the face → marks attendance.</div></div>
+<div class="q"><div class="qt"><span class="num">Q8.</span>Why do you take 5 photos at registration?</div><div class="a">Different angles (straight, left, right, up, down) make recognition reliable when the person is not looking straight at the camera.</div></div>
+<div class="q"><div class="qt"><span class="num">Q9.</span>What happens if the same person is registered twice?</div><div class="a">The system detects a duplicate face (distance below <b>0.42</b>) and warns the admin before saving.</div></div>
+<div class="q"><div class="qt"><span class="num">Q10.</span>Can attendance be marked twice in a day?</div><div class="a">No. The database has a unique index on (student, day), so a second scan shows "Already marked today".</div></div>
+<div class="q"><div class="qt"><span class="num">Q11.</span>What does the kiosk show as a result?</div><div class="a">"Attendance marked ✓", "Already marked today", or "Unable to verify identity" when it is not sure.</div></div>
+
+<h2><span class="n">3</span>AI models &amp; transfer learning</h2>
+<div class="q"><div class="qt"><span class="num">Q12.</span>Which pre-trained models did you use?</div><div class="a">
+  <table>
+    <tr><th>Model</th><th>Job</th></tr>
+    <tr><td>SSD MobileNet v1</td><td><b>Finds</b> the face in the picture</td></tr>
+    <tr><td>Face Landmark 68</td><td><b>Marks 68 points</b> (eyes, nose, mouth, jaw)</td></tr>
+    <tr><td>Face Recognition ResNet</td><td>Turns the face into <b>128 numbers</b></td></tr>
+    <tr><td>MiniFASNetV2</td><td><b>Anti-spoof:</b> real face or fake?</td></tr>
+    <tr><td>MiniFASNetV1SE</td><td><b>Second anti-spoof</b> check (wider view)</td></tr>
+  </table></div></div>
+<div class="q"><div class="qt"><span class="num">Q13.</span>What is transfer learning?</div><div class="a">Reusing a model that was already trained on a huge dataset for a new task, instead of training from zero. It is like someone who can ride a bicycle learning a motorbike faster.</div></div>
+<div class="q"><div class="qt"><span class="num">Q14.</span>Did you use transfer learning? Which type?</div><div class="a">Yes, as <b>feature extraction</b>: the pre-trained models stay frozen, and only their output (the 128 numbers and scores) is used. No fine-tuning is done.</div></div>
+<div class="q"><div class="qt"><span class="num">Q15.</span>Did you train any model?</div><div class="a">No. Registration only stores the face numbers; it does not train or change any model.</div><div class="tip">Remember: "Registration stores; it doesn't train."</div></div>
+<div class="q"><div class="qt"><span class="num">Q16.</span>Where are the models used in your code?</div><div class="a"><code>faceEngine.js</code> loads and runs the detection, landmark and recognition models. <code>liveness.js</code> runs the two anti-spoof models.</div></div>
+<div class="q"><div class="qt"><span class="num">Q17.</span>What is the 68-landmark model used for?</div><div class="a">Head angle (yaw/roll), face alignment, blink detection and the head-turn challenge.</div></div>
+<div class="q"><div class="qt"><span class="num">Q18.</span>What input sizes do the models use?</div><div class="a">The recognition model takes 150×150 pixels. The anti-spoof models take 80×80 pixels.</div></div>
+
+<h2><span class="n">4</span>Face matching</h2>
+<div class="q"><div class="qt"><span class="num">Q19.</span>What is a face embedding (descriptor)?</div><div class="a">A list of 128 numbers that describes a face. Photos of the same person give very similar numbers.</div></div>
+<div class="q"><div class="qt"><span class="num">Q20.</span>How do you compare two faces?</div><div class="a">With the <b>Euclidean distance</b> between their 128-number lists. A small distance means the same person, and <b>≤ 0.5</b> counts as a match.</div></div>
+<div class="q"><div class="qt"><span class="num">Q21.</span>How do you avoid a wrong person being marked (false positive)?</div><div class="a">
+  <ul>
+    <li>The distance must be ≤ <b>0.5</b>.</li>
+    <li>The best match must beat the second-best person by at least <b>0.06</b> (margin).</li>
+    <li>The same result must hold for <b>3 frames</b> in a row, and more frames when the match is weaker.</li>
+    <li>If unsure, the kiosk shows "Unable to verify identity" instead of guessing.</li>
+  </ul></div></div>
+<div class="q"><div class="qt"><span class="num">Q22.</span>Why did you choose 0.5 as the threshold?</div><div class="a">It is the standard value for this model. It can be calibrated on our own data with the <code>npm run evaluate</code> script.</div></div>
+
+<h2><span class="n">5</span>Anti-spoofing (liveness)</h2>
+<div class="q"><div class="qt"><span class="num">Q23.</span>What is liveness detection?</div><div class="a">Checking that a real, live person is in front of the camera, not a photo, video or phone screen.</div></div>
+<div class="q"><div class="qt"><span class="num">Q24.</span>How did you implement liveness?</div><div class="a">
+  <b>1. Passive:</b> two MiniFASNet models give a "real" score, which must be ≥ <b>0.6</b>.<br>
+  <b>2. Active:</b> a challenge where the person must slightly turn their head left or right within 10 seconds.</div></div>
+<div class="q"><div class="qt"><span class="num">Q25.</span>Why two anti-spoof models?</div><div class="a">One looks closely at the face (2.7× crop) and the other looks at a wider area including the background (4.0× crop). Together they are more accurate.</div></div>
+<div class="q"><div class="qt"><span class="num">Q26.</span>Can someone fool the system with a photo?</div><div class="a">A printed photo or screen usually fails the passive check, and a still photo cannot turn its head for the challenge. Failed attempts are recorded in the audit log.</div></div>
+
+<h2><span class="n">6</span>Security</h2>
+<div class="q"><div class="qt"><span class="num">Q27.</span>How do you protect face data?</div><div class="a">Face numbers are encrypted with <b>AES-256-GCM</b> in the database, and no face photos are stored.</div></div>
+<div class="q"><div class="qt"><span class="num">Q28.</span>How is the admin password stored?</div><div class="a">Hashed with <b>bcrypt</b> (cost 12), never stored as plain text.</div></div>
+<div class="q"><div class="qt"><span class="num">Q29.</span>How does login work?</div><div class="a">A <b>JWT</b> token is kept in an httpOnly, SameSite=Strict cookie. After <b>5 wrong passwords</b> the account locks for 15 minutes.</div></div>
+<div class="q"><div class="qt"><span class="num">Q30.</span>Which attacks did you protect against?</div><div class="a">
+  <ul>
+    <li><b>CSRF:</b> custom header plus origin check</li>
+    <li><b>XSS:</b> Content Security Policy headers (helmet)</li>
+    <li><b>NoSQL injection:</b> input validation with zod</li>
+    <li><b>Brute force:</b> rate limits and account lockout</li>
+    <li><b>Fake uploads:</b> image file type and size checks</li>
+  </ul></div></div>
+<div class="q"><div class="qt"><span class="num">Q31.</span>Can anyone open the kiosk and use it?</div><div class="a">No. The admin must activate the device first, and each device gets its own login, which the admin can deactivate.</div></div>
+<div class="q"><div class="qt"><span class="num">Q32.</span>Where are secret keys kept?</div><div class="a">In the <code>.env</code> file, which is never committed to Git.</div></div>
+
+<h2><span class="n">7</span>Database</h2>
+<div class="q"><div class="qt"><span class="num">Q33.</span>Which database and why?</div><div class="a">MongoDB. It is flexible for storing documents such as students with several face samples, and it works naturally with Node.js.</div></div>
+<div class="q"><div class="qt"><span class="num">Q34.</span>What collections are there?</div><div class="a">Students, Attendance, Admin, Device and AuditLog.</div></div>
+<div class="q"><div class="qt"><span class="num">Q35.</span>What is stored in an attendance record?</div><div class="a">Name, roll number, date, check-in time, status (Present/Late), and verification details (distance, confidence, liveness score).</div></div>
+<div class="q"><div class="qt"><span class="num">Q36.</span>What is the audit log?</div><div class="a">A record of important actions, such as logins, registrations, edits, exports and failed spoof attempts, with who did them and when.</div></div>
+
+<h2><span class="n">8</span>Features</h2>
+<div class="q"><div class="qt"><span class="num">Q37.</span>How is the attendance report generated?</div><div class="a">The admin clicks <b>Export Excel</b>, and the backend creates an <code>.xlsx</code> file with ExcelJS, filtered by date, name or status.</div></div>
+<div class="q"><div class="qt"><span class="num">Q38.</span>What is "Late" status?</div><div class="a">A check-in after the set time (<code>LATE_AFTER</code>, for example 09:30) is marked Late, using the Asia/Kolkata time zone.</div></div>
+<div class="q"><div class="qt"><span class="num">Q39.</span>What quality checks do you do before using a face?</div><div class="a">Face size, sharpness (blur), brightness, and head angle. A bad frame gets a hint such as "Move closer to the camera" or "Improve lighting".</div></div>
+<div class="q"><div class="qt"><span class="num">Q40.</span>What does the dashboard show?</div><div class="a">Active users, present / late / absent today, today's check-ins, the last 7 days, and warnings for users who need re-registration or possible duplicate faces.</div></div>
+
+<h2><span class="n">9</span>Testing &amp; limitations</h2>
+<div class="q"><div class="qt"><span class="num">Q41.</span>How did you test the project?</div><div class="a"><b>58 backend tests</b> (recognition, security, attendance), <b>9 frontend tests</b>, and end-to-end tests in a real browser with a fake camera.</div></div>
+<div class="q"><div class="qt"><span class="num">Q42.</span>What is the accuracy?</div><div class="a">The ResNet recognition model is about 99% accurate on the LFW benchmark. Real accuracy depends on the thresholds, which can be tuned with the evaluate scripts.</div></div>
+<div class="q"><div class="qt"><span class="num">Q43.</span>What are the limitations?</div><div class="a">Very poor lighting, identical twins, and high-quality 3D masks can cause problems, and a camera is required.</div></div>
+<div class="q"><div class="qt"><span class="num">Q44.</span>What is the future scope?</div><div class="a">Mobile app, cloud deployment with HTTPS, SMS/email alerts, multiple classes or departments, and depth-camera liveness.</div></div>
+
+<h2><span class="n">10</span>Tricky questions</h2>
+<div class="q"><div class="qt"><span class="num">Q45.</span>Why didn't you train your own CNN?</div><div class="a">Training needs millions of face images and powerful GPUs. Pre-trained models already give high accuracy, which is exactly the benefit of transfer learning.</div></div>
+<div class="q"><div class="qt"><span class="num">Q46.</span>Is this classification? Why use distance?</div><div class="a">No, it is comparison. Each face is turned into numbers and compared by distance, so new people can be added without retraining.</div></div>
+<div class="q"><div class="qt"><span class="num">Q47.</span>What happens when a new student joins?</div><div class="a">The admin registers them with 5 photos. No retraining is needed.</div></div>
+<div class="q"><div class="qt"><span class="num">Q48.</span>Where does the face processing happen — browser or server?</div><div class="a">On the <b>server</b>. The browser only sends camera frames, so the models and the face data are not exposed to the user.</div></div>
+<div class="q"><div class="qt"><span class="num">Q49.</span>Why "Unable to verify identity" instead of the closest match?</div><div class="a">Marking the wrong person is worse than asking someone to try again. Avoiding false positives is the system's top priority.</div></div>
+<div class="q"><div class="qt"><span class="num">Q50.</span>What if the encryption key is lost?</div><div class="a">The stored face data cannot be decrypted, so everyone must register again. That is why the key must be backed up safely.</div></div>
+
+<h2 class="brk"><span class="n">11</span>Numbers to remember</h2>
+<table>
+  <tr><th>What</th><th>Value</th></tr>
+  <tr><td>Pre-trained models</td><td><b>5</b></td></tr>
+  <tr><td>Face embedding size</td><td><b>128</b> numbers</td></tr>
+  <tr><td>Landmark points</td><td><b>68</b></td></tr>
+  <tr><td>Photos at registration</td><td><b>5</b> (straight, left, right, up, down)</td></tr>
+  <tr><td>Match threshold (distance)</td><td><b>≤ 0.5</b></td></tr>
+  <tr><td>Minimum margin to second-best</td><td><b>0.06</b></td></tr>
+  <tr><td>Duplicate face threshold</td><td><b>0.42</b></td></tr>
+  <tr><td>Stable frames needed</td><td><b>3</b></td></tr>
+  <tr><td>Liveness "real" score</td><td><b>≥ 0.6</b></td></tr>
+  <tr><td>Head-turn challenge time</td><td><b>10</b> seconds</td></tr>
+  <tr><td>Recognition input / anti-spoof input</td><td><b>150×150</b> / <b>80×80</b> pixels</td></tr>
+  <tr><td>Encryption</td><td><b>AES-256-GCM</b></td></tr>
+  <tr><td>Password hashing</td><td><b>bcrypt</b>, cost 12</td></tr>
+  <tr><td>Account lock</td><td><b>5</b> wrong passwords → <b>15</b> minutes</td></tr>
+  <tr><td>Backend / frontend tests</td><td><b>58</b> / <b>9</b></td></tr>
+  <tr><td>Ports</td><td>Backend <b>5000</b>, frontend <b>3000</b>, MongoDB <b>27017</b></td></tr>
+</table>
+
+<h2><span class="n">12</span>Memory tricks</h2>
+<div class="tricks">
+  <div><b>Find → Point → Guard → Fingerprint</b>The models in order: detection, landmarks, anti-spoof, recognition.</div>
+  <div><b>Freeze → Extract → Compare</b>How transfer learning works here: frozen models, 128 numbers, distance.</div>
+  <div><b>Stores, doesn't train</b>Registration saves encrypted face numbers; no model is trained.</div>
+</div>
+<div class="box ok" style="margin-top:12px">
+  <b>60-second answer:</b> "My project is a face recognition attendance system built with React, Node.js and MongoDB. It uses five pre-trained models through transfer learning, as feature extraction: SSD MobileNet finds the face, Face Landmark 68 marks points, MiniFASNet checks the face is real, and ResNet turns it into 128 numbers. These numbers are compared by Euclidean distance with a 0.5 threshold, a margin check and 3 stable frames, so a wrong person is never marked. Face data is encrypted with AES-256, and the admin can export attendance to Excel."
+</div>
+
+</body>
+</html>
