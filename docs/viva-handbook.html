@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FaceAttend — Viva Handbook</title>
+<style>
+  @page { size: A4; margin: 14mm 14mm 15mm 14mm; }
+  :root { --ink:#0f172a; --ink2:#475569; --ink3:#64748b; --line:#dbe2ea; --blue:#2563eb; --blue-soft:#eff6ff; --green:#15803d; --green-soft:#ecfdf3; --amber-soft:#fffbeb; --violet:#6d28d9; --violet-soft:#f5f3ff; --red-soft:#fef2f2; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Inter, Arial, sans-serif; color: var(--ink); font-size: 9.6pt; line-height: 1.4; margin: 0; }
+  h1 { font-size: 27pt; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h2 { font-size: 14pt; margin: 0 0 8px; padding-bottom: 5px; border-bottom: 2px solid var(--blue); page-break-after: avoid; }
+  h2 .n { color: var(--blue); margin-right: 6px; }
+  h3 { font-size: 10.5pt; margin: 9px 0 4px; page-break-after: avoid; }
+  p { margin: 0 0 6px; }
+  code { font-family: Consolas, monospace; font-size: 8.5pt; background: #f1f5f9; padding: 1px 4px; border-radius: 3px; }
+  section { page-break-before: always; }
+  section.flow { page-break-before: auto; margin-top: 14px; }
+  .cover { height: 255mm; display: flex; flex-direction: column; justify-content: center; }
+  .tag { color: var(--blue); font-weight: 700; letter-spacing: .12em; font-size: 9pt; text-transform: uppercase; }
+  .lead { font-size: 12.5pt; color: var(--ink2); max-width: 155mm; margin-top: 8px; }
+  .toc { margin-top: 22px; font-size: 10.2pt; columns: 2; column-gap: 16px; }
+  .toc div { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0 8px; font-size: 8.7pt; }
+  tr { page-break-inside: avoid; }
+  th { background: #f1f5f9; text-align: left; font-weight: 600; padding: 3px 6px; border: 1px solid var(--line); color: var(--ink2); }
+  td { padding: 3px 6px; border: 1px solid var(--line); vertical-align: top; }
+  .box { border: 1px solid var(--line); border-radius: 8px; padding: 8px 11px; margin: 7px 0; page-break-inside: avoid; }
+  .key { background: var(--blue-soft); border-color: #bfdbfe; }
+  .ok { background: var(--green-soft); border-color: #bbf7d0; }
+  .warn { background: var(--amber-soft); border-color: #fde68a; }
+  .vio { background: var(--violet-soft); border-color: #ddd6fe; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  ul, ol { margin: 3px 0 6px; padding-left: 18px; }
+  li { margin: 1.5px 0; }
+  .arch { display: grid; grid-template-columns: 1fr 22px 1.25fr 22px 1fr; align-items: center; margin: 8px 0 10px; }
+  .arch .col { display: flex; flex-direction: column; gap: 6px; }
+  .arch .node { border: 1.5px solid var(--line); border-radius: 8px; padding: 7px 9px; background: #fff; font-size: 8.6pt; page-break-inside: avoid; }
+  .arch .node b { display: block; font-size: 9.4pt; }
+  .arch .node.fe { border-color: #bfdbfe; background: var(--blue-soft); }
+  .arch .node.be { border-color: #ddd6fe; background: var(--violet-soft); }
+  .arch .node.db { border-color: #bbf7d0; background: var(--green-soft); }
+  .arch .ar { text-align: center; color: var(--ink3); font-size: 15pt; }
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 4px 0 8px; }
+  .steps li { counter-increment: s; position: relative; padding: 4px 0 4px 30px; border-bottom: 1px dashed var(--line); page-break-inside: avoid; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 700; font-size: 8.5pt; display: grid; place-items: center; }
+  .pipe { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 5px 0 8px; }
+  .pipe span { border: 1px solid #bfdbfe; background: var(--blue-soft); color: var(--blue); border-radius: 6px; padding: 3px 8px; font-size: 8.8pt; font-weight: 600; }
+  .pipe i { color: var(--ink3); font-style: normal; }
+  .formula { font-family: Consolas, monospace; font-size: 10pt; text-align: center; padding: 8px; background: #f8fafc; border: 1px solid var(--line); border-radius: 8px; margin: 6px 0; }
+  pre { font-family: Consolas, monospace; font-size: 8.3pt; background: #f8fafc; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin: 5px 0 8px; line-height: 1.35; white-space: pre; page-break-inside: avoid; }
+  .tricks { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .tricks div { border: 1px solid #ddd6fe; background: var(--violet-soft); border-radius: 8px; padding: 8px 10px; page-break-inside: avoid; }
+  .tricks b { display: block; color: var(--violet); font-size: 10.5pt; margin-bottom: 2px; }
+  .muted { color: var(--ink3); }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="tag">FaceAttend · Complete viva handbook</div>
+  <h1>Face Recognition Attendance System</h1>
+  <p class="lead">Everything you need for the viva in one place: what the project is, how it is built, how every module works, the AI models, security, database, API, how to run and demo it, and quick revision.</p>
+  <div class="toc">
+    <div>1. Project at a glance</div>
+    <div>2. Technology stack</div>
+    <div>3. System architecture</div>
+    <div>4. Folder structure</div>
+    <div>5. Modules and what they do</div>
+    <div>6. Registration workflow</div>
+    <div>7. Attendance (kiosk) workflow</div>
+    <div>8. AI models &amp; transfer learning</div>
+    <div>9. Face matching algorithm</div>
+    <div>10. Anti-spoofing (liveness)</div>
+    <div>11. Security</div>
+    <div>12. Database design</div>
+    <div>13. API endpoints</div>
+    <div>14. Settings and numbers</div>
+    <div>15. How to run</div>
+    <div>16. Demo script for the viva</div>
+    <div>17. Testing</div>
+    <div>18. Advantages, limitations, future scope</div>
+    <div>19. Key terms (glossary)</div>
+    <div>20. Last-minute revision</div>
+  </div>
+  <div class="box key" style="margin-top:20px">
+    <b>Companion PDFs in <code>docs/</code>:</b> <code>FaceAttend-Viva-Questions.pdf</code> (50 Q&amp;A), <code>FaceAttend-Transfer-Learning.pdf</code> (models in depth), <code>FaceAttend-Documentation.pdf</code> (full technical documentation).
+  </div>
+</div>
+
+<!-- 1 -->
+<section>
+<h2><span class="n">1</span>Project at a glance</h2>
+<table>
+  <tr><th style="width:26%">Item</th><th>Detail</th></tr>
+  <tr><td>Title</td><td><b>FaceAttend: Face Recognition Attendance System with Anti-Spoofing</b></td></tr>
+  <tr><td>Type</td><td>Full-stack web application (React + Node.js/Express + MongoDB) with AI face models</td></tr>
+  <tr><td>Problem</td><td>Manual roll-call is slow, error-prone and allows proxy attendance. Simple face systems can be fooled by a photo and may mark the wrong person.</td></tr>
+  <tr><td>Solution</td><td>A kiosk camera recognises each person's face, checks they are a real live person, and marks attendance once per day. An admin console manages users and reports.</td></tr>
+  <tr><td>Key idea</td><td>Pre-trained deep-learning models (transfer learning) turn each face into 128 numbers; faces are compared by distance.</td></tr>
+  <tr><td>Top priority</td><td><b>Never mark the wrong person.</b> If unsure, show "Unable to verify identity".</td></tr>
+</table>
+
+<h3>Objectives</h3>
+<ol>
+  <li>Mark attendance automatically and contactlessly using face recognition.</li>
+  <li>Prevent proxy attendance with anti-spoofing (photo, video and screen attacks).</li>
+  <li>Avoid false matches with strict thresholds, a margin check and multi-frame confirmation.</li>
+  <li>Allow only one attendance record per person per day.</li>
+  <li>Protect biometric data with encryption and secure admin login.</li>
+  <li>Give the admin a dashboard, a searchable attendance list and Excel export.</li>
+</ol>
+
+<h3>Main features</h3>
+<div class="grid2">
+  <ul>
+    <li>Guided 5-pose face registration with automatic capture</li>
+    <li>Duplicate-face detection at registration</li>
+    <li>Kiosk scanning with live on-screen hints</li>
+    <li>Passive liveness (2 models) + head-turn challenge</li>
+    <li>Present / Late status by time zone</li>
+  </ul>
+  <ul>
+    <li>Dashboard: present, late and absent today, last 7 days</li>
+    <li>Attendance filters, status edit, delete, Excel export</li>
+    <li>Kiosk device activation and deactivation</li>
+    <li>Audit log of every important action</li>
+    <li>Encrypted face templates, no photos stored</li>
+  </ul>
+</div>
+
+<section class="flow">
+<h2><span class="n">2</span>Technology stack</h2>
+<table>
+  <tr><th style="width:18%">Layer</th><th style="width:30%">Technology</th><th>Why it is used</th></tr>
+  <tr><td>Frontend</td><td>React 19, React Router 7</td><td>Single-page app for the admin console and the kiosk screen; camera access through the browser</td></tr>
+  <tr><td>Backend</td><td>Node.js 22, Express 5</td><td>REST API; runs all face processing on the server</td></tr>
+  <tr><td>Database</td><td>MongoDB + Mongoose 8</td><td>Stores users, encrypted face samples, attendance, devices and the audit log</td></tr>
+  <tr><td>Face AI</td><td>@vladmandic/face-api 1.7 on TensorFlow.js 4.22 (WASM backend)</td><td>Face detection, 68 landmarks, 128-number face descriptor</td></tr>
+  <tr><td>Anti-spoof</td><td>onnxruntime-node + MiniFASNet (ONNX)</td><td>Real vs. fake face score</td></tr>
+  <tr><td>Security</td><td>helmet, bcryptjs, jsonwebtoken, express-rate-limit, zod, Node crypto (AES-256-GCM)</td><td>Secure headers, password hashing, sessions, rate limits, input validation, encryption</td></tr>
+  <tr><td>Uploads</td><td>multer (memory), jpeg-js, pngjs</td><td>Receive camera frames safely without saving files to disk</td></tr>
+  <tr><td>Reports</td><td>ExcelJS</td><td>Attendance export to <code>.xlsx</code></td></tr>
+  <tr><td>Testing</td><td>node:test + supertest; Jest + React Testing Library</td><td>58 backend tests and 9 frontend tests</td></tr>
+</table>
+<div class="box key">Stack name to say: <b>MERN stack</b> (MongoDB, Express, React, Node.js) <b>+ TensorFlow.js + ONNX Runtime</b>.</div>
+</section>
+</section>
+
+<!-- 3 -->
+<section>
+<h2><span class="n">3</span>System architecture</h2>
+<div class="arch">
+  <div class="col">
+    <div class="node fe"><b>Kiosk page</b>Camera → sends frames 3–5 times a second</div>
+    <div class="node fe"><b>Admin console</b>Dashboard, users, register, attendance, settings</div>
+    <div class="muted" style="font-size:8pt;text-align:center">React frontend (port 3000)</div>
+  </div>
+  <div class="ar">⇄</div>
+  <div class="col">
+    <div class="node be"><b>Express REST API</b>helmet · rate limit · CSRF guard · JWT auth · zod validation</div>
+    <div class="node be"><b>Services</b>faceEngine · faceAnalysis · quality · liveness · matcher · gallery · scanSession · enrollment · attendance · audit</div>
+    <div class="node be"><b>Pre-trained models</b>SSD MobileNet · Landmark 68 · ResNet · MiniFASNet ×2</div>
+    <div class="muted" style="font-size:8pt;text-align:center">Node.js backend (port 5000)</div>
+  </div>
+  <div class="ar">⇄</div>
+  <div class="col">
+    <div class="node db"><b>MongoDB</b>students · attendances · admins · devices · auditlogs</div>
+    <div class="node db"><b>In-memory gallery</b>Decrypted face templates loaded at start for fast matching</div>
+    <div class="muted" style="font-size:8pt;text-align:center">Database (port 27017)</div>
+  </div>
+</div>
+<div class="grid2">
+  <div class="box">
+    <b>Why processing is on the server</b>
+    <ul>
+      <li>Face data and models are never sent to the browser.</li>
+      <li>A user cannot tamper with the result in the browser.</li>
+      <li>The kiosk can be any device with a camera and a browser.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <b>Server start-up order</b> (<code>server.js</code>)
+    <ol>
+      <li>Load and check configuration (<code>.env</code>)</li>
+      <li>Connect to MongoDB and run migrations</li>
+      <li>Load the 5 AI models</li>
+      <li>Decrypt face templates into the gallery</li>
+      <li>Start listening on port 5000</li>
+    </ol>
+  </div>
+</div>
+
+<section class="flow">
+<h2><span class="n">4</span>Folder structure</h2>
+<pre>facedetection/
+├── backend/
+│   ├── server.js              start-up: config → DB → models → gallery → listen
+│   ├── .env                   secrets (never committed)
+│   ├── models/                pre-trained model files (face-api + antispoof/*.onnx)
+│   ├── scripts/               create-admin, download-models, evaluate, evaluate-liveness, rotate-keys
+│   ├── test/                  58 automated tests
+│   └── src/
+│       ├── app.js             Express app, security middleware, routes
+│       ├── config/            all settings, validated with zod
+│       ├── db.js, migrations/ database connection and safe upgrades
+│       ├── models/            Mongoose schemas: Student, Attendance, Admin, Device, AuditLog
+│       ├── middleware/        auth, CSRF guard, uploads, rate limits, validation, errors
+│       ├── routes/            auth, kiosk, students, attendance, admin
+│       ├── services/          face engine, liveness, matcher, scan session, enrollment ...
+│       └── utils/             logger, errors, time zone, biometric encryption
+├── frontend/
+│   └── src/
+│       ├── App.js             page routes
+│       ├── api/client.js      fetch wrapper (cookies + CSRF header)
+│       ├── auth/              login state (AuthContext)
+│       ├── hooks/useCamera.js camera access
+│       ├── components/        FaceCapture (5-pose capture), shared UI
+│       └── pages/             Home, Login, Kiosk, admin/* (Dashboard, Students, Register ...)
+└── docs/                      documentation and viva PDFs</pre>
+</section>
+</section>
+
+<!-- 5 -->
+<section>
+<h2><span class="n">5</span>Modules and what they do</h2>
+<h3>Frontend pages</h3>
+<table>
+  <tr><th style="width:26%">Page / file</th><th style="width:16%">URL</th><th>What it does</th></tr>
+  <tr><td>Home.js</td><td>/</td><td>Entry page with "Kiosk" and "Admin console" cards</td></tr>
+  <tr><td>Login.js</td><td>/login</td><td>Admin sign-in</td></tr>
+  <tr><td>Kiosk.js</td><td>/kiosk</td><td>Activate the device, camera scanning, hints, result screen</td></tr>
+  <tr><td>Dashboard.js</td><td>/admin</td><td>Active users, present / late / absent today, today's check-ins, last 7 days, warnings</td></tr>
+  <tr><td>Students.js</td><td>/admin/students</td><td>User list, search, filters for re-registration and duplicates</td></tr>
+  <tr><td>RegisterStudent.js</td><td>/admin/students/new</td><td>Registration wizard: details → 5 face poses → save</td></tr>
+  <tr><td>StudentDetail.js</td><td>/admin/students/:id</td><td>Edit, re-capture face, deactivate, delete</td></tr>
+  <tr><td>Attendance.js</td><td>/admin/attendance</td><td>Records with filters, status change, delete, Excel export</td></tr>
+  <tr><td>Settings.js</td><td>/admin/settings</td><td>Change password, kiosk devices, audit log</td></tr>
+  <tr><td>FaceCapture.js</td><td>(component)</td><td>Guides the 5 poses and captures automatically after 2 good frames</td></tr>
+</table>
+
+<h3>Backend services</h3>
+<table>
+  <tr><th style="width:24%">Service</th><th>Job</th></tr>
+  <tr><td>faceEngine.js</td><td>Loads SSD MobileNet, Landmark 68 and ResNet; detects faces, finds landmarks and creates the 128-number descriptor</td></tr>
+  <tr><td>faceGeometry.js</td><td>Calculates head angle (yaw, roll, pitch) and eye openness from the landmarks</td></tr>
+  <tr><td>quality.js</td><td>Checks face size, sharpness, brightness and pose; returns a hint message</td></tr>
+  <tr><td>liveness.js</td><td>Runs the 2 MiniFASNet models (passive) and the head-turn challenge (active)</td></tr>
+  <tr><td>faceAnalysis.js</td><td>Combines all checks for one image into one result</td></tr>
+  <tr><td>matcher.js</td><td>Compares descriptors by Euclidean distance; applies threshold and margin rules</td></tr>
+  <tr><td>gallery.js</td><td>Keeps decrypted templates of all active users in memory</td></tr>
+  <tr><td>scanSession.js</td><td>Kiosk state machine: SEARCH → CHALLENGE → CONFIRM → DONE</td></tr>
+  <tr><td>enrollmentService.js</td><td>Validates the 5 samples, checks duplicates, encrypts and saves them</td></tr>
+  <tr><td>attendanceService.js</td><td>Marks attendance once per day, sets Present/Late, applies cooldown</td></tr>
+  <tr><td>audit.js</td><td>Writes the audit log</td></tr>
+  <tr><td>biometricCrypto.js</td><td>AES-256-GCM encryption and decryption of face templates</td></tr>
+</table>
+
+<h3>Backend routes</h3>
+<table>
+  <tr><th style="width:24%">Route file</th><th>Responsibility</th></tr>
+  <tr><td>auth.js</td><td>Login, logout, session check, change password, kiosk activate and deactivate</td></tr>
+  <tr><td>kiosk.js</td><td>Receives camera frames and returns the scan result</td></tr>
+  <tr><td>students.js</td><td>Register, list, view, edit, re-capture face, delete, check duplicates</td></tr>
+  <tr><td>attendance.js</td><td>List, export Excel, change status, delete</td></tr>
+  <tr><td>admin.js</td><td>Dashboard data, devices, audit log, system info</td></tr>
+</table>
+</section>
+
+<!-- 6 -->
+<section>
+<h2><span class="n">6</span>Registration workflow</h2>
+<ol class="steps">
+  <li><b>Admin signs in</b> and opens <i>Register user</i>.</li>
+  <li><b>Enters details</b>: name and roll number (the roll number must be unique).</li>
+  <li><b>Captures 5 poses</b>: front, slight left, slight right, slight up and slight down. Each pose is captured automatically after 2 good frames.</li>
+  <li><b>Each photo is checked</b> on the server (<code>/students/check-sample</code>): exactly one face, big enough, sharp, well lit, correct pose, and a real person (liveness).</li>
+  <li><b>Descriptors are created</b>: the ResNet model turns each face into 128 numbers.</li>
+  <li><b>Duplicate check</b>: if the face matches an existing user (distance &lt; 0.42), the admin is warned.</li>
+  <li><b>Encrypt and save</b>: the 5 descriptors are encrypted with AES-256-GCM and saved. <b>The photos are discarded.</b></li>
+  <li><b>Gallery updated</b>: the new user can scan at the kiosk right away. No training is needed.</li>
+</ol>
+<div class="box warn"><b>Viva point:</b> registration does <b>not</b> train the model. It only stores the face numbers.</div>
+
+<section class="flow">
+<h2><span class="n">7</span>Attendance (kiosk) workflow</h2>
+<div class="pipe"><span>Camera frame</span><i>→</i><span>Detect face</span><i>→</i><span>Landmarks</span><i>→</i><span>Quality check</span><i>→</i><span>Passive liveness</span><i>→</i><span>Descriptor</span><i>→</i><span>Match</span><i>→</i><span>Head-turn challenge</span><i>→</i><span>Confirm</span><i>→</i><span>Mark</span></div>
+<table>
+  <tr><th style="width:15%">Phase</th><th>What happens</th><th style="width:30%">Kiosk shows</th></tr>
+  <tr><td><b>SEARCH</b></td><td>Each frame: find the face, check quality, check passive liveness (≥ 0.6), create the descriptor and match it. The same person must be matched on <b>3 frames</b> (5 if the match is weaker).</td><td>"Look at the camera", "Move closer to the camera"…</td></tr>
+  <tr><td><b>CHALLENGE</b></td><td>A random task: turn the head slightly left or right within <b>10 seconds</b>. The same face must stay in view.</td><td>"Please turn your head slightly to your left."</td></tr>
+  <tr><td><b>CONFIRM</b></td><td>One more front-facing frame must match the same person.</td><td>"Look straight at the camera"</td></tr>
+  <tr><td><b>DONE</b></td><td>Attendance is saved once per day (Present or Late), with distance, confidence and liveness score.</td><td>"Attendance marked ✓" / "Already marked today"</td></tr>
+</table>
+<div class="grid2">
+  <div class="box">
+    <b>Possible results</b>
+    <ul>
+      <li><b>MARKED</b>: new record saved</li>
+      <li><b>ALREADY_MARKED</b>: already present today</li>
+      <li><b>UNVERIFIED</b>: not sure who it is, so nothing is marked</li>
+      <li><b>Liveness / challenge failed</b>: possible spoof, recorded in the audit log</li>
+    </ul>
+  </div>
+  <div class="box">
+    <b>Why so many steps?</b>
+    <ul>
+      <li>Multiple frames remove one-off wrong matches.</li>
+      <li>The challenge defeats photos and still screens.</li>
+      <li>The confirm step ensures it is the same person after the turn.</li>
+    </ul>
+  </div>
+</div>
+</section>
+</section>
+
+<!-- 8 -->
+<section>
+<h2><span class="n">8</span>AI models &amp; transfer learning</h2>
+<div class="box key"><b>Transfer learning</b> means reusing a model already trained on a huge dataset for a new task instead of training from zero. This project uses the <b>feature extraction</b> type: the models are <b>frozen</b> (not retrained) and only their outputs are used. <b>No training or fine-tuning is done.</b></div>
+<table>
+  <tr><th>#</th><th>Model</th><th>Job (nickname)</th><th>Input → Output</th><th>Runs in</th></tr>
+  <tr><td>1</td><td><b>SSD MobileNet v1</b></td><td>Face detection (<i>Finder</i>)</td><td>Camera image → face box + score</td><td>faceEngine.js</td></tr>
+  <tr><td>2</td><td><b>Face Landmark 68</b></td><td>68 face points (<i>Pointer</i>)</td><td>Face crop → 68 (x, y) points</td><td>faceEngine.js, faceGeometry.js</td></tr>
+  <tr><td>3</td><td><b>Face Recognition ResNet</b></td><td>Face descriptor (<i>Fingerprinter</i>)</td><td>Aligned 150×150 face → 128 numbers</td><td>faceEngine.js → matcher.js</td></tr>
+  <tr><td>4</td><td><b>MiniFASNetV2</b></td><td>Anti-spoof (<i>Guard 1</i>)</td><td>80×80 crop (2.7× face) → real score</td><td>liveness.js</td></tr>
+  <tr><td>5</td><td><b>MiniFASNetV1SE</b></td><td>Anti-spoof (<i>Guard 2</i>)</td><td>80×80 crop (4.0× face) → real score</td><td>liveness.js</td></tr>
+</table>
+<div class="grid2">
+  <div class="box">
+    <b>How each model is built (simple)</b>
+    <ul>
+      <li><b>SSD</b> = Single Shot Detector: finds objects in one pass. <b>MobileNet</b> = a light, fast CNN.</li>
+      <li><b>ResNet</b> = Residual Network: a deep CNN with "skip connections" that make deep networks train well.</li>
+      <li><b>MiniFASNet</b> = a small CNN for Face Anti-Spoofing; "SE" adds a Squeeze-and-Excitation attention block.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <b>Where the model files come from</b>
+    <ul>
+      <li>Models 1–3: the <b>@vladmandic/face-api</b> package (<code>npm run models</code> copies them into <code>backend/models</code>).</li>
+      <li>Models 4–5: ONNX files from the open-source face-anti-spoofing project (Apache-2.0), checked with SHA-256.</li>
+      <li>All are loaded once at server start.</li>
+    </ul>
+  </div>
+</div>
+<div class="box vio"><b>Remember the order:</b> <b>Find → Point → Guard → Fingerprint</b> (detection → landmarks → anti-spoof → recognition).</div>
+
+<section class="flow">
+<h2><span class="n">9</span>Face matching algorithm</h2>
+<p>Every face becomes a vector of 128 numbers. Two faces are compared using the <b>Euclidean distance</b>:</p>
+<div class="formula">d(A, B) = √( (a₁ − b₁)² + (a₂ − b₂)² + … + (a₁₂₈ − b₁₂₈)² )</div>
+<p>A small distance means the same person, and a large distance means different people. Each user has 5 stored samples; the distance to a user is the <b>smallest</b> distance to any of their samples (strategy <code>min</code>).</p>
+<table>
+  <tr><th style="width:5%">#</th><th>Rule (matcher.js + scanSession.js)</th><th style="width:22%">Value</th></tr>
+  <tr><td>1</td><td>Best distance must be within the threshold</td><td>≤ <b>0.5</b></td></tr>
+  <tr><td>2</td><td>The second-best <i>different</i> person must be at least this much further away (margin)</td><td>≥ <b>0.06</b></td></tr>
+  <tr><td>3</td><td>The same person must be matched on consecutive good frames</td><td><b>3</b> frames (5 if median distance &gt; 0.4)</td></tr>
+  <tr><td>4</td><td>Confidence label stored with the record</td><td><b>high</b> if ≤ 0.4, else <b>standard</b></td></tr>
+  <tr><td>5</td><td>Otherwise the result is "unknown" (NO_MATCH or AMBIGUOUS)</td><td>"Unable to verify identity"</td></tr>
+</table>
+<div class="box warn"><b>Why distance and not a classifier?</b> A classifier must be retrained whenever a new person joins. Distance-based comparison works for any number of people, and a new user only needs to be registered.</div>
+</section>
+</section>
+
+<!-- 10 -->
+<section>
+<h2><span class="n">10</span>Anti-spoofing (liveness)</h2>
+<div class="grid2">
+  <div class="box">
+    <b>1. Passive liveness (no action needed)</b>
+    <ul>
+      <li>Two MiniFASNet models look at the face at two zoom levels (2.7× and 4.0×).</li>
+      <li>Each outputs probabilities (softmax); class 1 = "real".</li>
+      <li>The two "real" scores are averaged: <b>score ≥ 0.6</b> passes.</li>
+      <li>Detects print photos, phone and laptop screens, and replayed videos from texture, moiré and edge clues.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <b>2. Active challenge (user action)</b>
+    <ul>
+      <li>A random instruction: turn the head slightly <b>left</b> or <b>right</b>.</li>
+      <li>Head angle (yaw) is measured from the 68 landmarks; it must change by ≥ <b>0.15</b>.</li>
+      <li>Must be done within <b>10 seconds</b>, with the same face kept in view.</li>
+      <li>Blink detection is also available (eye aspect ratio), off by default.</li>
+    </ul>
+  </div>
+</div>
+<div class="box ok"><b>Why both?</b> A passive model alone can be fooled by a very good print; a challenge alone can be fooled by a video. Together they are much stronger. Every failure is saved in the audit log as a security event.</div>
+
+<section class="flow">
+<h2><span class="n">11</span>Security</h2>
+<table>
+  <tr><th style="width:26%">Threat</th><th>Protection in this project</th></tr>
+  <tr><td>Stolen face data</td><td>Templates encrypted with <b>AES-256-GCM</b> (key in <code>BIOMETRIC_KEY</code>); <b>no photos stored</b>; templates are hidden from API responses</td></tr>
+  <tr><td>Password theft</td><td><b>bcrypt</b> hashing with cost 12</td></tr>
+  <tr><td>Session hijack</td><td><b>JWT</b> in an <b>httpOnly, SameSite=Strict</b> cookie (JavaScript cannot read it); separate admin and kiosk tokens; logout and password change invalidate old tokens</td></tr>
+  <tr><td>Brute-force login</td><td>20 attempts per 15 min per IP; account locked for 15 min after <b>5</b> wrong passwords</td></tr>
+  <tr><td>CSRF</td><td>Requests must carry the <code>X-Requested-With</code> header and an allowed Origin</td></tr>
+  <tr><td>XSS, clickjacking</td><td><b>helmet</b> headers: Content-Security-Policy, X-Frame-Options, nosniff, HSTS</td></tr>
+  <tr><td>NoSQL injection, bad input</td><td>Every request validated with <b>zod</b> schemas; 20 KB JSON limit</td></tr>
+  <tr><td>Malicious uploads</td><td>Files kept in memory only; image type checked from magic bytes; size and resolution limits</td></tr>
+  <tr><td>Unauthorised kiosk</td><td>Kiosk must be activated by an admin; devices can be deactivated</td></tr>
+  <tr><td>Spoofing (photo, video)</td><td>Passive liveness + head-turn challenge</td></tr>
+  <tr><td>Wrong person marked</td><td>Threshold + margin + multi-frame + confirm step</td></tr>
+  <tr><td>Duplicate attendance</td><td>Unique database index on (student, day)</td></tr>
+  <tr><td>Secret leaks</td><td>Secrets in <code>.env</code> (not in Git); logger hides sensitive fields</td></tr>
+  <tr><td>Accountability</td><td>Audit log of logins, changes, exports and spoof attempts</td></tr>
+</table>
+</section>
+</section>
+
+<!-- 12 -->
+<section>
+<h2><span class="n">12</span>Database design (MongoDB)</h2>
+<div class="grid2">
+  <div class="box">
+    <b>students</b>
+    <ul>
+      <li><code>name</code>, <code>rollNo</code> (unique), <code>active</code></li>
+      <li><code>samples[]</code> (hidden by default): <code>enc</code> (encrypted descriptor), <code>pose</code>, <code>quality</code>, <code>liveness</code></li>
+      <li><code>sampleCount</code>, <code>createdAt</code>, <code>updatedAt</code></li>
+    </ul>
+  </div>
+  <div class="box">
+    <b>attendances</b>
+    <ul>
+      <li><code>studentId</code>, <code>studentName</code>, <code>rollNo</code></li>
+      <li><code>dayKey</code> (YYYY-MM-DD), <code>checkInAt</code>, <code>status</code> (Present / Late)</li>
+      <li><code>source</code> (kiosk / manual / legacy), <code>deviceId</code></li>
+      <li><code>verification</code>: distance, confidence, liveness, challenge</li>
+      <li><b>Unique index</b> (studentId, dayKey)</li>
+    </ul>
+  </div>
+  <div class="box">
+    <b>admins</b>
+    <ul>
+      <li><code>username</code> (unique), <code>passwordHash</code> (bcrypt)</li>
+      <li><code>tokenVersion</code> (session invalidation), <code>failedLogins</code>, <code>lockUntil</code>, <code>lastLoginAt</code></li>
+    </ul>
+  </div>
+  <div class="box">
+    <b>devices</b>
+    <ul>
+      <li><code>name</code>, <code>active</code>, <code>createdBy</code>, <code>lastSeenAt</code></li>
+    </ul>
+    <b>auditlogs</b>
+    <ul>
+      <li><code>action</code>, <code>category</code> (admin / auth / security / system)</li>
+      <li><code>actor</code>, <code>target</code>, <code>details</code>, <code>ip</code>, <code>createdAt</code></li>
+    </ul>
+  </div>
+</div>
+<div class="box key"><b>Relationships:</b> one student → many attendance records (one per day). One device → many attendance records. The audit log points to whichever record was changed.</div>
+
+<section class="flow">
+<h2><span class="n">13</span>API endpoints (all under <code>/api</code>)</h2>
+<table>
+  <tr><th style="width:9%">Method</th><th style="width:31%">Path</th><th style="width:12%">Access</th><th>Purpose</th></tr>
+  <tr><td>GET</td><td>/health</td><td>Public</td><td>Server status</td></tr>
+  <tr><td>POST</td><td>/auth/login · /auth/logout</td><td>Public / Admin</td><td>Sign in, sign out</td></tr>
+  <tr><td>GET</td><td>/auth/me</td><td>Any</td><td>Who is signed in (admin / kiosk)</td></tr>
+  <tr><td>POST</td><td>/auth/change-password</td><td>Admin</td><td>Change password</td></tr>
+  <tr><td>POST</td><td>/auth/kiosk/activate · /deactivate</td><td>Admin / Kiosk</td><td>Turn this browser into a kiosk, or stop</td></tr>
+  <tr><td>POST</td><td>/kiosk/scan</td><td>Kiosk</td><td>Send a camera frame, get the scan step / result</td></tr>
+  <tr><td>POST</td><td>/students/check-sample</td><td>Admin</td><td>Check one registration photo</td></tr>
+  <tr><td>POST</td><td>/students</td><td>Admin</td><td>Register a user with 5 samples</td></tr>
+  <tr><td>GET</td><td>/students · /students/:id · /students/duplicates</td><td>Admin</td><td>List, view, find duplicate faces</td></tr>
+  <tr><td>PATCH · PUT · DELETE</td><td>/students/:id · /students/:id/face</td><td>Admin</td><td>Edit, re-capture face, delete</td></tr>
+  <tr><td>GET</td><td>/attendance · /attendance/export</td><td>Admin</td><td>List records, download Excel</td></tr>
+  <tr><td>PATCH · DELETE</td><td>/attendance/:id</td><td>Admin</td><td>Change status, delete a record</td></tr>
+  <tr><td>GET</td><td>/admin/dashboard · /admin/audit · /admin/system</td><td>Admin</td><td>Dashboard data, audit log, settings info</td></tr>
+  <tr><td>GET · PATCH</td><td>/admin/devices · /admin/devices/:id</td><td>Admin</td><td>List and (de)activate kiosk devices</td></tr>
+</table>
+</section>
+</section>
+
+<!-- 14 -->
+<section>
+<h2><span class="n">14</span>Settings and numbers (<code>backend/.env</code>)</h2>
+<table>
+  <tr><th style="width:36%">Setting</th><th style="width:14%">Value</th><th>Meaning</th></tr>
+  <tr><td>RECOGNITION_THRESHOLD</td><td>0.5</td><td>Maximum distance to accept a match</td></tr>
+  <tr><td>HIGH_CONFIDENCE_THRESHOLD</td><td>0.4</td><td>At or below this, confidence is "high"</td></tr>
+  <tr><td>RECOGNITION_MIN_MARGIN</td><td>0.06</td><td>Required gap to the second-best person</td></tr>
+  <tr><td>DUPLICATE_FACE_THRESHOLD</td><td>0.42</td><td>Duplicate warning at registration</td></tr>
+  <tr><td>STABLE_FRAMES</td><td>3</td><td>Frames that must agree</td></tr>
+  <tr><td>LIVENESS_THRESHOLD</td><td>0.6</td><td>Minimum "real" score</td></tr>
+  <tr><td>CHALLENGE_TURN_DELTA / TIMEOUT</td><td>0.15 / 10 s</td><td>Head turn required and time allowed</td></tr>
+  <tr><td>MIN_FACE_SIZE_PX / ENROLL_MIN_FACE_SIZE_PX</td><td>90 / 110</td><td>Minimum face size at kiosk / registration</td></tr>
+  <tr><td>MIN_SHARPNESS · MIN/MAX_BRIGHTNESS</td><td>20 · 55–205</td><td>Image quality limits</td></tr>
+  <tr><td>MAX_YAW · MAX_ROLL_DEG</td><td>0.35 · 20°</td><td>Maximum head turn / tilt for a normal scan</td></tr>
+  <tr><td>ATTENDANCE_COOLDOWN_SEC</td><td>60</td><td>Repeat scans of the same person within 60 s are answered from memory ("Already marked")</td></tr>
+  <tr><td>APP_TIMEZONE · LATE_AFTER</td><td>Asia/Kolkata · HH:MM</td><td>Day boundary and Late time</td></tr>
+  <tr><td>ADMIN_SESSION_HOURS · KIOSK_SESSION_DAYS</td><td>8 · 30</td><td>How long logins last</td></tr>
+  <tr><td>JWT_SECRET · BIOMETRIC_KEY</td><td>secret</td><td>Session signing key · face encryption key (back it up)</td></tr>
+</table>
+
+<section class="flow">
+<h2><span class="n">15</span>How to run</h2>
+<div class="grid2">
+  <div class="box">
+    <b>First time only</b>
+<pre>cd backend
+npm install
+npm run models
+npm run create-admin -- het
+cd ..\frontend
+npm install</pre>
+  </div>
+  <div class="box">
+    <b>Every time</b> (MongoDB must be running)
+<pre>Terminal 1:  cd backend   →  npm start
+Terminal 2:  cd frontend  →  npm start
+
+Open  http://localhost:3000
+Admin /admin  ·  Kiosk /kiosk</pre>
+  </div>
+</div>
+<table>
+  <tr><th style="width:38%">Other command (in <code>backend</code>)</th><th>Use</th></tr>
+  <tr><td><code>npm test</code></td><td>Run the 58 backend tests</td></tr>
+  <tr><td><code>npm run evaluate -- &lt;folder&gt;</code></td><td>Measure recognition accuracy and choose the threshold</td></tr>
+  <tr><td><code>npm run evaluate-liveness -- --live &lt;dir&gt; --spoof &lt;dir&gt;</code></td><td>Measure anti-spoof accuracy</td></tr>
+  <tr><td><code>npm run rotate-keys</code></td><td>Change secret keys safely</td></tr>
+  <tr><td><code>npm run build</code> (in frontend)</td><td>Production build, then served by the backend on port 5000</td></tr>
+</table>
+</section>
+</section>
+
+<!-- 16 -->
+<section>
+<h2><span class="n">16</span>Demo script for the viva (about 5 minutes)</h2>
+<ol class="steps">
+  <li><b>Start both servers</b> before the viva and open <code>http://localhost:3000</code>. Explain the two sides: kiosk and admin console.</li>
+  <li><b>Sign in as admin (het)</b> → show the <b>Dashboard</b>: active users, present, late, absent, last 7 days.</li>
+  <li><b>Register a user</b> → show the 5-pose capture, quality hints and automatic capture. Say: "Photos are not stored; only encrypted 128-number descriptors."</li>
+  <li><b>Open the kiosk</b> (/kiosk) → look at the camera → follow the head-turn instruction → "Attendance marked ✓".</li>
+  <li><b>Scan again</b> → "Already marked today" (one record per day).</li>
+  <li><b>Show a photo on a phone</b> to the kiosk → it is rejected (liveness / challenge failed).</li>
+  <li><b>Attendance page</b> → show the new record with its verification details → click <b>Export Excel</b>.</li>
+  <li><b>Settings → Audit log</b> → show the login, registration and spoof attempt records.</li>
+</ol>
+<div class="box warn"><b>Before the viva:</b> check that MongoDB is running, the camera works in the browser, the room has good front lighting, and at least one user is registered. Keep a phone photo ready for the spoof demo.</div>
+
+<section class="flow">
+<h2><span class="n">17</span>Testing</h2>
+<table>
+  <tr><th style="width:30%">Test file / type</th><th>What it checks</th></tr>
+  <tr><td>unit.recognition</td><td>Distance, threshold, margin, ambiguous matches, duplicate detection</td></tr>
+  <tr><td>unit.scanSession</td><td>SEARCH → CHALLENGE → CONFIRM → DONE flow, timeouts, wrong-person switches</td></tr>
+  <tr><td>unit.utils</td><td>Encryption, time zone day keys, log redaction</td></tr>
+  <tr><td>api.security</td><td>Login, lockout, CSRF, unauthorised access, input validation, headers</td></tr>
+  <tr><td>api.attendance</td><td>One record per day, status change, export, filters</td></tr>
+  <tr><td>integration.engine</td><td>Real models on real images: detection, descriptor, liveness</td></tr>
+  <tr><td>Frontend (Jest, 9 tests)</td><td>Pages render, login errors, redirects, dashboard, users list</td></tr>
+  <tr><td>End-to-end</td><td>Real browser with a fake camera: success, already marked, failed challenge, mobile layout</td></tr>
+</table>
+<p class="muted">Result: <b>58/58 backend</b> and <b>9/9 frontend</b> tests pass. Tests use a separate database, so real data is never touched.</p>
+</section>
+</section>
+
+<!-- 18 -->
+<section>
+<h2><span class="n">18</span>Advantages, limitations, future scope</h2>
+<div class="grid3">
+  <div class="box ok">
+    <b>Advantages</b>
+    <ul>
+      <li>Fast and contactless</li>
+      <li>Stops proxy attendance</li>
+      <li>No wrong-person marks by design</li>
+      <li>No model training needed</li>
+      <li>Add users any time</li>
+      <li>Encrypted biometric data</li>
+      <li>Runs on a normal PC, no GPU</li>
+      <li>Excel reports and audit trail</li>
+    </ul>
+  </div>
+  <div class="box warn">
+    <b>Limitations</b>
+    <ul>
+      <li>Needs good lighting</li>
+      <li>Identical twins can be confused</li>
+      <li>High-quality 3D masks may pass</li>
+      <li>Large changes (heavy beard, mask) may need re-registration</li>
+      <li>Needs a camera at each kiosk</li>
+      <li>Thresholds should be tuned on local data</li>
+    </ul>
+  </div>
+  <div class="box vio">
+    <b>Future scope</b>
+    <ul>
+      <li>Cloud deployment with HTTPS</li>
+      <li>Mobile app</li>
+      <li>SMS / email alerts to parents</li>
+      <li>Classes, subjects, timetables</li>
+      <li>Depth / infrared camera liveness</li>
+      <li>GPU backend for many kiosks</li>
+      <li>Mask-aware recognition</li>
+    </ul>
+  </div>
+</div>
+
+<section class="flow">
+<h2><span class="n">19</span>Key terms (glossary)</h2>
+<table>
+  <tr><th style="width:24%">Term</th><th>Simple meaning</th></tr>
+  <tr><td>CNN</td><td>Convolutional Neural Network: a deep-learning model that learns patterns in images</td></tr>
+  <tr><td>Transfer learning</td><td>Reusing a model trained on a big dataset for a new task</td></tr>
+  <tr><td>Feature extraction</td><td>Using a frozen pre-trained model only to produce features (here, 128 numbers)</td></tr>
+  <tr><td>Fine-tuning</td><td>Retraining some layers on your own data (not done here)</td></tr>
+  <tr><td>Embedding / descriptor</td><td>The list of 128 numbers that represents a face</td></tr>
+  <tr><td>Euclidean distance</td><td>Straight-line distance between two vectors; small = similar</td></tr>
+  <tr><td>Threshold</td><td>The cut-off value for accepting a match (0.5)</td></tr>
+  <tr><td>False positive / negative</td><td>Wrong person accepted / right person rejected</td></tr>
+  <tr><td>Landmarks</td><td>Key points on the face (68 here)</td></tr>
+  <tr><td>Liveness / anti-spoofing</td><td>Checking that the face is a real live person</td></tr>
+  <tr><td>Softmax</td><td>Turns model outputs into probabilities that add up to 1</td></tr>
+  <tr><td>Yaw / roll / pitch</td><td>Head turn left-right / tilt sideways / nod up-down</td></tr>
+  <tr><td>ONNX</td><td>An open file format for AI models that runs on many platforms</td></tr>
+  <tr><td>TensorFlow.js / WASM</td><td>Google's ML library for JavaScript / a fast way to run it on any CPU</td></tr>
+  <tr><td>REST API</td><td>A way for the frontend to talk to the backend using HTTP URLs</td></tr>
+  <tr><td>JWT</td><td>JSON Web Token: a signed login token</td></tr>
+  <tr><td>bcrypt</td><td>A slow, salted password hashing method</td></tr>
+  <tr><td>AES-256-GCM</td><td>Strong encryption that also detects tampering</td></tr>
+  <tr><td>CSRF / XSS</td><td>Tricking a signed-in browser into a request / injecting malicious script</td></tr>
+  <tr><td>Kiosk</td><td>The camera screen at the entrance where people mark attendance</td></tr>
+</table>
+</section>
+</section>
+
+<!-- 20 -->
+<section>
+<h2><span class="n">20</span>Last-minute revision</h2>
+<div class="tricks">
+  <div><b>Find → Point → Guard → Fingerprint</b>SSD MobileNet → Landmark 68 → MiniFASNet ×2 → ResNet (128 numbers).</div>
+  <div><b>Freeze → Extract → Compare</b>Transfer learning by feature extraction: frozen models, 128 numbers, Euclidean distance.</div>
+  <div><b>Stores, doesn't train</b>Registration saves 5 encrypted descriptors; photos are discarded.</div>
+</div>
+<h3>Numbers to remember</h3>
+<table>
+  <tr><td>Models</td><td><b>5</b></td><td>Descriptor</td><td><b>128</b> numbers</td><td>Landmarks</td><td><b>68</b></td></tr>
+  <tr><td>Registration poses</td><td><b>5</b></td><td>Match threshold</td><td><b>≤ 0.5</b></td><td>Margin</td><td><b>0.06</b></td></tr>
+  <tr><td>Duplicate</td><td><b>0.42</b></td><td>Stable frames</td><td><b>3</b></td><td>Liveness</td><td><b>≥ 0.6</b></td></tr>
+  <tr><td>Challenge</td><td><b>10 s</b>, turn 0.15</td><td>Inputs</td><td><b>150×150 / 80×80</b></td><td>Encryption</td><td><b>AES-256-GCM</b></td></tr>
+  <tr><td>Password</td><td><b>bcrypt 12</b></td><td>Lockout</td><td><b>5 → 15 min</b></td><td>Tests</td><td><b>58 + 9</b></td></tr>
+  <tr><td>Ports</td><td><b>3000 / 5000 / 27017</b></td><td>Time zone</td><td><b>Asia/Kolkata</b></td><td>Admin user</td><td><b>het</b></td></tr>
+</table>
+<div class="box ok">
+  <b>60-second answer: "Explain your project."</b><br>
+  "My project is a face recognition attendance system built on the MERN stack: React, Node.js with Express, and MongoDB. A kiosk camera sends frames to the server, where five pre-trained models are used through transfer learning, as feature extraction. SSD MobileNet finds the face, Face Landmark 68 marks 68 points, two MiniFASNet models check that the face is real, and a ResNet model turns the face into 128 numbers. These are compared with stored faces using Euclidean distance with a 0.5 threshold, a margin check and three stable frames, followed by a head-turn challenge, so a photo cannot be used and the wrong person is never marked. Attendance is saved once per day. Face data is encrypted with AES-256, and the admin can manage users, view a dashboard and export attendance to Excel."
+</div>
+<div class="box key"><b>If you don't know an answer:</b> say what you do know about that part of the project, and mention where it is in the code (for example, "that logic is in matcher.js"). Never guess numbers; use the table above.</div>
+</section>
+
+</body>
+</html>
