@@ -1,6 +1,7 @@
 // Developer tool: print quality/pose/liveness measurements for a folder of
 // images so thresholds can be sanity-checked on your own camera.
 // Usage: node scripts/probe-images.js <folder>
+   
 const fs = require('fs');
 const path = require('path');
 const engine = require('../src/services/faceEngine');
